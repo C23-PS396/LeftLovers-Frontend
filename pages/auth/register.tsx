@@ -1,12 +1,11 @@
-import Navbar from "@/components/layout/navbar/Navbar";
-import Landing from "@/components/pages/landing/Landing";
+import Register from "@/components/pages/auth/Register";
 import Head from "next/head";
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>LeftLovers Apps</title>
+        <title>LeftLovers Apps | Register</title>
         <link rel="icon" href="/logo.ico" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
@@ -18,8 +17,7 @@ export default function Home() {
           content="The easiest customizable URL shortener, ever."
         />
       </Head>
-      <Navbar type="landing" />
-      <Landing />
+      <Register />
     </>
   );
 }

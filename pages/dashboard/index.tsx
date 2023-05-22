@@ -1,12 +1,17 @@
+import {
+  AuthContextState,
+  useAuthContext,
+} from "@/components/context/AuthContext";
 import Navbar from "@/components/layout/navbar/Navbar";
-import Landing from "@/components/pages/landing/Landing";
 import Head from "next/head";
 
-export default function Home() {
+export default function Dashboard() {
+  const { user }: AuthContextState = useAuthContext() as AuthContextState;
+
   return (
     <>
       <Head>
-        <title>LeftLovers Apps</title>
+        <title>LeftLovers Apps | Dashboard</title>
         <link rel="icon" href="/logo.ico" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
@@ -18,8 +23,8 @@ export default function Home() {
           content="The easiest customizable URL shortener, ever."
         />
       </Head>
-      <Navbar type="landing" />
-      <Landing />
+      <Navbar type="merchant" />
+      <main>Hello Dashboard! this is {user?.username}</main>
     </>
   );
 }
