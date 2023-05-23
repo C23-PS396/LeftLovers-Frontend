@@ -33,6 +33,8 @@ import {
 import BankAccountInformationPage from "./components/Registration/BankAccountInformationPage";
 import MerchantInformationPage from "./components/Registration/MerchantInformationPage";
 import ContactInformationInput from "@/components/type/Registration/ContactInformationInput";
+import AddFoodPage from "./components/Registration/AddFoodPage";
+import { FoodInput } from "@/components/type/Registration/FoodInput";
 
 const steps = [
   { title: "First", description: "Contact Info" },
@@ -57,6 +59,7 @@ const Register = () => {
   const [bankInput, setBankInput] = useState<BankAccountInput>();
   const [merchantInput, setMerchantInput] =
     useState<MerchantInformationInput>();
+  const [foodInput, setFoodInput] = useState<FoodInput[]>([]);
 
   const getBank = async () => {
     const res = await axios.get("/api/bank");
@@ -188,6 +191,13 @@ const Register = () => {
             }
             setActiveStep={setActiveStep}
           />
+        )}
+        {activeStep === 4 && (
+          <AddFoodPage
+            setActiveStep={setActiveStep}
+            foodInput={foodInput}
+            setFoodInput={setFoodInput}
+          ></AddFoodPage>
         )}
       </div>
     </div>

@@ -57,6 +57,14 @@ const STYLE_GUIDE = {
     text: "text-gray-400",
     borderColor: "border-gray",
   },
+  success: {
+    border: "rounded-lg",
+    width: "border-0",
+    color: "bg-[#38A169]",
+    hover: "bg-[#48BB78]",
+    text: "text-[#FFF]",
+    borderColor: "",
+  },
 };
 
 const Button = ({
@@ -66,7 +74,7 @@ const Button = ({
   children,
 }: {
   className?: string;
-  type: "primary" | "outlined" | "dead";
+  type: "primary" | "outlined" | "dead" | "success";
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }) => {
