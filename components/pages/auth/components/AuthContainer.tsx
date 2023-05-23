@@ -1,7 +1,7 @@
 const AuthContainer = ({ children }: React.PropsWithChildren<{}>) => {
   return (
     <div
-      className="w-screen min-h-screen px-2 py-8 flex items-center justify-center"
+      className="w-full min-h-screen px-2 py-8 flex flex-col items-center justify-center box-border"
       style={{ backgroundImage: `url('/bg-auth.jpg')` }}
     >
       {children}

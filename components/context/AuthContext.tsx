@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import jwt from "jwt-decode";
 import axios from "axios";
@@ -8,6 +15,7 @@ export interface User {
   username: string;
   email: string;
   fullname: string;
+  role: string;
 }
 
 export const AuthStatus = {
@@ -21,9 +29,11 @@ export interface AuthContextState {
   user: User | null;
   authStatus: number;
   loggingIn: boolean;
+  setAuthStatus: Dispatch<React.SetStateAction<number>>;
   login: (token: string) => void;
   logout: () => void;
   authenticate: () => void;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 
 export const AuthContext = createContext<AuthContextState | null>(null);
@@ -38,7 +48,6 @@ export const AuthContextProvider = ({
   const [authStatus, setAuthStatus] = useState(AuthStatus.NOT_AUTHENTICATED);
   const router = useRouter();
 
-  // when page is first loaded
   useEffect(() => {
     setLoggingIn(true);
     async function initAuth() {
@@ -51,19 +60,16 @@ export const AuthContextProvider = ({
 
   const login = (token: string) => {
     const decodedToken = jwt<User>(token);
-    console.log(decodedToken);
     setUser(decodedToken);
     setAuthStatus(AuthStatus.AUTHENTICATED);
-    localStorage.setItem("token", token);
-    router.push("/dashboard"); // Redirect to dashboard or desired route after login
+    router.push("/dashboard");
   };
 
   const logout = async () => {
     await axios.post("/api/logout");
-    localStorage.clear();
     setUser(null);
     setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
-    router.push("/"); // Redirect to home or desired route after logout
+    router.push("/");
   };
 
   const authenticate = async () => {
@@ -74,17 +80,6 @@ export const AuthContextProvider = ({
       setAuthStatus(AuthStatus.TOKEN_UNVERIFIED);
       return AuthStatus.TOKEN_UNVERIFIED;
     } else if (tokenStatus === "TOKEN_DOES_NOT_EXIST") {
-      let userFromStorage;
-      try {
-        userFromStorage = localStorage.getItem("user");
-      } catch {
-        userFromStorage = null;
-      }
-      if (user || userFromStorage) {
-        await logout();
-        setAuthStatus(AuthStatus.SESSION_EXPIRED);
-        return AuthStatus.SESSION_EXPIRED;
-      }
       setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
       return AuthStatus.NOT_AUTHENTICATED;
     } else {
@@ -99,7 +94,9 @@ export const AuthContextProvider = ({
 
   const authContextValue: AuthContextState = {
     user,
+    setUser,
     authStatus,
+    setAuthStatus,
     login,
     logout,
     loggingIn,

@@ -3,15 +3,28 @@ import LogoWrapper from "../components/LogoWrapper";
 import NavLinkWrapper from "../components/NavLinkWrapper";
 import NavbarWrapper from "../components/NavbarWrapper";
 import Link from "next/link";
-// import Button from "@/components/common/Button";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import {
+  AuthContextState,
+  AuthStatus,
+  useAuthContext,
+} from "@/components/context/AuthContext";
 
 const LandingNavbarWrapper = () => {
   const router = useRouter();
+  const { authStatus }: AuthContextState = useAuthContext() as AuthContextState;
 
   const loginClickHandler = () => {
     router.push("/auth/login");
+  };
+
+  const registerClickHandler = () => {
+    router.push("/auth/register");
+  };
+
+  const dashboardClickHandler = () => {
+    router.push("/dashboard");
   };
 
   return (
@@ -32,17 +45,34 @@ const LandingNavbarWrapper = () => {
         <Link href="#team">
           <Text fontSize="lg">Team</Text>
         </Link>
-        <Button width={100} variant="outline" colorScheme="blue">
-          Register
-        </Button>
-        <Button
-          width={100}
-          variant="solid"
-          colorScheme="blue"
-          onClick={loginClickHandler}
-        >
-          Log In
-        </Button>
+        {authStatus === AuthStatus.AUTHENTICATED ? (
+          <Button
+            variant="solid"
+            colorScheme="blue"
+            onClick={dashboardClickHandler}
+          >
+            Dashboard
+          </Button>
+        ) : (
+          <>
+            <Button
+              width={100}
+              variant="outline"
+              colorScheme="blue"
+              onClick={registerClickHandler}
+            >
+              Register
+            </Button>
+            <Button
+              width={100}
+              variant="solid"
+              colorScheme="blue"
+              onClick={loginClickHandler}
+            >
+              Log In
+            </Button>
+          </>
+        )}
       </NavLinkWrapper>
     </NavbarWrapper>
   );
