@@ -21,11 +21,26 @@ import {
   ModalFooter,
   useDisclosure,
   FormHelperText,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  NumberInput,
+  useToast,
 } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
 import AuthForm from "../AuthForm";
 import Button from "@/components/common/Button";
-import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
-import { FoodInput } from "@/components/type/Registration/FoodInput";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Category, FoodInput } from "@/components/type/Registration/FoodInput";
+import axios from "axios";
+import useCustomToast from "@/components/utils/useCustomToast";
 
 const AddFoodPage = ({
   foodInput,
@@ -40,7 +55,15 @@ const AddFoodPage = ({
   const initialRef = useRef(null);
   const finalRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState<File | null>(null);
-  const [food, setFood] = useState<FoodInput>();
+  const [food, setFood] = useState<FoodInput>({
+    name: "",
+    price: 0,
+    category: [],
+  });
+  const [categoryOption, setCategoryOption] = useState<Category[]>();
+  const [categoryMatch, setCategoryMatch] = useState<Category[]>();
+  const [searchedString, setSearchedString] = useState<String>("");
+  const toast = useCustomToast();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -53,6 +76,29 @@ const AddFoodPage = ({
     }
     setSelectedFiles(null);
   };
+
+  const getCategory = async () => {
+    const response = await axios.get("/api/food/getAllCategory");
+    const { data }: { data: Category[] } = response.data;
+    setCategoryOption(data);
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
+
+  useEffect(() => {
+    if (searchedString && searchedString !== "") {
+      const regex = new RegExp(searchedString as string, "i");
+
+      let matches = categoryOption?.filter((item) => regex.test(item.name));
+      console.log(matches);
+      if (matches && matches.length > 5) {
+        matches = matches.splice(0, 5);
+      }
+      setCategoryMatch(matches);
+    }
+  }, [categoryOption, searchedString]);
 
   return (
     <>
@@ -215,6 +261,109 @@ const AddFoodPage = ({
                 Set your food price in Rupiah (Rp)
               </FormHelperText>
             </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Food Category</FormLabel>
+              <div className="mb-2 flex flex-wrap gap-2">
+                {food?.category.map((category) => {
+                  return (
+                    <div
+                      key={category}
+                      onClick={() => {
+                        const idx = food.category.findIndex(
+                          (el) => el === category
+                        );
+                        let currentList = food.category;
+                        currentList.splice(idx, 1);
+                        setFood({ ...food, category: currentList });
+                      }}
+                      className="rounded-lg bg-[#EEE] px-2 py-1 text-[0.7rem] cursor-pointer w-fit hover:bg-[#CC252E] hover:text-[#FFF]"
+                    >
+                      {category}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex gap-4">
+                <Input
+                  type="text"
+                  value={searchedString as any}
+                  onChange={(e) => {
+                    setSearchedString(e.currentTarget.value);
+                  }}
+                />
+                <Buttons
+                  colorScheme="green"
+                  onClick={() => {
+                    let curList = food?.category.slice();
+                    if (
+                      curList.findIndex(
+                        (listCategory) => listCategory === searchedString
+                      ) >= 0
+                    ) {
+                      toast({
+                        type: "error",
+                        message: "Category already exist",
+                        title: "Category error",
+                      });
+                      return;
+                    }
+
+                    if (curList) {
+                      curList.push(searchedString as string);
+                    } else {
+                      curList = [searchedString as string];
+                    }
+                    setFood({
+                      ...food,
+                      category: curList,
+                    });
+                    setSearchedString("");
+                  }}
+                >
+                  <CheckIcon />
+                </Buttons>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {(searchedString !== "" || searchedString) &&
+                  categoryMatch?.map((el) => {
+                    return (
+                      <div
+                        key={el.name}
+                        className="rounded-lg bg-[#CCC] px-2 py-1 text-[0.7rem] cursor-pointer"
+                        onClick={() => {
+                          let curList = food?.category.slice();
+                          if (
+                            curList.findIndex(
+                              (listCategory) => listCategory === el.name
+                            ) >= 0
+                          ) {
+                            toast({
+                              type: "error",
+                              message: "Category already exist",
+                              title: "Category error",
+                            });
+                            return;
+                          }
+
+                          if (curList) {
+                            curList.push(el.name);
+                          } else {
+                            curList = [el.name];
+                          }
+                          setFood({
+                            ...food,
+                            category: curList,
+                          });
+                          setSearchedString("");
+                          // setFood({ ...(food as FoodInput) , category:  });
+                        }}
+                      >
+                        {el.name}
+                      </div>
+                    );
+                  })}
+              </div>
+            </FormControl>
           </ModalBody>
 
           <ModalFooter>
@@ -230,7 +379,7 @@ const AddFoodPage = ({
                   const newFoodInput = foodInput.slice();
                   newFoodInput.push(food);
                   setFoodInput(newFoodInput);
-                  setFood(undefined);
+                  setFood({ name: "", price: 0, category: [] });
                   onClose();
                 }
               }}
