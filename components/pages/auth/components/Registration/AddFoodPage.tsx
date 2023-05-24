@@ -21,11 +21,6 @@ import {
   ModalFooter,
   useDisclosure,
   FormHelperText,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInput,
-  useToast,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import AuthForm from "../AuthForm";
@@ -92,7 +87,6 @@ const AddFoodPage = ({
       const regex = new RegExp(searchedString as string, "i");
 
       let matches = categoryOption?.filter((item) => regex.test(item.name));
-      console.log(matches);
       if (matches && matches.length > 5) {
         matches = matches.splice(0, 5);
       }
@@ -123,6 +117,19 @@ const AddFoodPage = ({
                     <Stack>
                       <CardBody gap={2} display="flex" flexDirection="column">
                         <Heading size="md">{food.name}</Heading>
+                        <div className="flex gap-2 flex-wrap">
+                          {food.category.map((categoryItem) => {
+                            return (
+                              <div
+                                className="rounded-lg px-2 py-1 bg-[#EEE] text-[0.7rem]"
+                                key={categoryItem}
+                              >
+                                {" "}
+                                {categoryItem}
+                              </div>
+                            );
+                          })}
+                        </div>
                         <Text py="2">Rp{food.price}</Text>
                       </CardBody>
                       <CardFooter>
@@ -293,6 +300,7 @@ const AddFoodPage = ({
                 />
                 <Buttons
                   colorScheme="green"
+                  isDisabled={searchedString === "" || !searchedString}
                   onClick={() => {
                     let curList = food?.category.slice();
                     if (
@@ -355,7 +363,6 @@ const AddFoodPage = ({
                             category: curList,
                           });
                           setSearchedString("");
-                          // setFood({ ...(food as FoodInput) , category:  });
                         }}
                       >
                         {el.name}
@@ -370,6 +377,7 @@ const AddFoodPage = ({
             <Buttons
               colorScheme="blue"
               mr={3}
+              isDisabled={!food.name || !food.price}
               onClick={() => {
                 if (
                   food?.name &&

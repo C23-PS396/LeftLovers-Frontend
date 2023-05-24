@@ -117,12 +117,10 @@ const AccountInformationPage = ({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Customer
+              Back to Dashboard
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Are you sure? You cannot undo this action afterwards.
-            </AlertDialogBody>
+            <AlertDialogBody>Are you sure? All your changes will not be saved</AlertDialogBody>
 
             <AlertDialogFooter>
               <Buttons

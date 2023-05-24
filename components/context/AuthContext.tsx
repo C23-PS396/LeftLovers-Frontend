@@ -66,14 +66,14 @@ export const AuthContextProvider = ({
   };
 
   const logout = async () => {
-    await axios.post("/api/logout");
+    await axios.post("/api/auth/logout");
     setUser(null);
     setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
     router.push("/");
   };
 
   const authenticate = async () => {
-    const result = await axios.get("/api/login");
+    const result = await axios.get("/api/auth/login");
     const tokenStatus = result.data.message;
     if (tokenStatus === "TOKEN_UNVERIFIED") {
       await logout();

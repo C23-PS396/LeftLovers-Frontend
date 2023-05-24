@@ -61,7 +61,7 @@ const Login = () => {
 
     try {
       setIsSubmitting(true);
-      const res = await axios.post("/api/login", {
+      const res = await axios.post("/api/auth/login", {
         credential: credential,
         password: password,
       });
