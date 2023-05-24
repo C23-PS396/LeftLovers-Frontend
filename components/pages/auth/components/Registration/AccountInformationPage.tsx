@@ -117,10 +117,12 @@ const AccountInformationPage = ({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Back to Dashboard
+              Back to Main Page
             </AlertDialogHeader>
 
-            <AlertDialogBody>Are you sure? All your changes will not be saved</AlertDialogBody>
+            <AlertDialogBody>
+              Are you sure? All your changes will not be saved
+            </AlertDialogBody>
 
             <AlertDialogFooter>
               <Buttons

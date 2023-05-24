@@ -119,6 +119,18 @@ const Login = () => {
               {isSubmitting ? <Spinner size="sm"></Spinner> : "Log In"}
             </Button>
           </FormControl>
+          <Text
+            textAlign="center"
+            fontSize="0.9rem"
+            cursor="pointer"
+            textColor="#CC252E"
+            fontWeight={500}
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            Back to Main Page
+          </Text>
         </AuthForm>
       </AuthCard>
     </AuthContainer>
