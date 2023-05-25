@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import AuthForm from "./components/AuthForm";
 import Button from "@/components/common/Button";
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
 import {
   AuthContextState,

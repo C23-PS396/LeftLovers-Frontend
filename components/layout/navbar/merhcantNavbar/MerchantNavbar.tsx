@@ -6,6 +6,13 @@ import {
   Avatar,
   useDisclosure,
   Button,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  Popover,
 } from "@chakra-ui/react";
 import LogoWrapper from "../components/LogoWrapper";
 import NavLinkWrapper from "../components/NavLinkWrapper";
@@ -17,21 +24,38 @@ import {
   AuthStatus,
   useAuthContext,
 } from "@/components/context/AuthContext";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import CustomDrawer from "@/components/common/Drawer/Drawer";
+import WrapperHamburger from "../components/WrapperHumberger";
+import HamburgerIcon from "../components/HambergerIcon";
+import useWindowSize from "@/components/hook/useWindowSize";
+import useCustomToast from "@/components/utils/useCustomToast";
+import ProfilePopOver from "./ProfilePopOver";
 
 const MerchantNavbar = () => {
   const router = useRouter();
-  const { user }: AuthContextState = useAuthContext() as AuthContextState;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const btnRef = useRef();
+  const [open, setOpen] = useState(false);
+  const toast = useCustomToast();
+  const { logout, setUser, setAuthStatus }: AuthContextState =
+    useAuthContext() as AuthContextState;
 
-  const loginClickHandler = () => {
-    router.push("/auth/login");
+  const toggleHamburger = () => {
+    setOpen(!open);
   };
 
-  const dashboardClickHandler = () => {
-    router.push("/dashboard");
+  const logoutClickHandler = () => {
+    logout();
+    setUser(null);
+    setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
+    router.replace("/");
+
+    toast({
+      type: "info",
+      message: "You are successfully logout",
+      title: "Logout success",
+    });
   };
 
   return (
@@ -39,27 +63,30 @@ const MerchantNavbar = () => {
       <NavbarWrapper>
         <Link href="#home">
           <LogoWrapper>
-            <Heading>Left</Heading>
+            <Heading className="!!lg:text-[2.3rem] text-[2rem] ">Left</Heading>
             <Text fontSize="2xl">Lovers</Text>
           </LogoWrapper>
         </Link>
-        <NavLinkWrapper>
-          <Link href="#about">
-            <Text fontSize="lg">Dasboard</Text>
+        <WrapperHamburger open={open} onClick={toggleHamburger}>
+          <HamburgerIcon />
+        </WrapperHamburger>
+        <NavLinkWrapper open={open}>
+          <Link href="/dashboard">
+            <Text fontSize="lg" color="#7F8A96">
+              Overview
+            </Text>
           </Link>
-          <Link href="#our-mission">
-            <Text fontSize="lg">My Store</Text>
+          <Link href="/dashboard/order">
+            <Text fontSize="lg" color="#7F8A96">
+              Order
+            </Text>
           </Link>
-          <Wrap>
-            <WrapItem>
-              <Avatar
-                className="cursor-pointer"
-                onClick={onOpen}
-                name={user?.fullname}
-                src="https://bit.ly/dan-abramov"
-              />
-            </WrapItem>
-          </Wrap>
+          <Link href="/dashboard/review">
+            <Text fontSize="lg" color="#7F8A96">
+              Review
+            </Text>
+          </Link>
+          <ProfilePopOver logoutClickHandler={logoutClickHandler} />
         </NavLinkWrapper>
       </NavbarWrapper>
       <CustomDrawer isOpen={isOpen} onClose={onClose} btnRef={btnRef} />

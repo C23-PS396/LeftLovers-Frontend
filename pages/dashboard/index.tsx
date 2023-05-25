@@ -1,8 +1,10 @@
+import Container from "@/components/common/Container";
 import {
   AuthContextState,
   useAuthContext,
 } from "@/components/context/AuthContext";
 import Navbar from "@/components/layout/navbar/Navbar";
+import Overview from "@/components/pages/overview/Overview";
 import Head from "next/head";
 
 export default function Dashboard() {
@@ -24,7 +26,7 @@ export default function Dashboard() {
         />
       </Head>
       <Navbar type="merchant" />
-      <main>Hello Dashboard! this is {user?.username}</main>
+      <Overview />
     </>
   );
 }
