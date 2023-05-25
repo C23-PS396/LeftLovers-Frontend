@@ -12,7 +12,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import AuthForm from "../AuthForm";
-import Button from "@/components/common/Button";
 import {
   ChangeEvent,
   Dispatch,
@@ -21,7 +20,7 @@ import {
   SetStateAction,
   useRef,
 } from "react";
-import ContactInformationInput from "@/components/type/Registration/ContactInformationInput";
+import { ContactInformationInput } from "@/components/type/Registration/ContactInformationInput";
 import { useRouter } from "next/router";
 
 const AccountInformationPage = ({
@@ -36,6 +35,19 @@ const AccountInformationPage = ({
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+
+  const validateInput = () => {
+    if (!accountInput) return false;
+
+    const { fullname, email, password, username } = accountInput;
+    
+    if (!fullname) return false;
+    if (!email) return false;
+    if (!password) return false;
+    if (!username) return false;
+
+    return true;
+  };
 
   const fullnameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const fullname = e.currentTarget.value;
@@ -63,7 +75,7 @@ const AccountInformationPage = ({
         <FormControl>
           <FormLabel>Full Name</FormLabel>
           <Input
-            value={accountInput?.fullname}
+            value={accountInput?.fullname || ""}
             onChange={fullnameChangeHandler}
             type="text"
           ></Input>
@@ -71,7 +83,7 @@ const AccountInformationPage = ({
         <FormControl>
           <FormLabel>Username</FormLabel>
           <Input
-            value={accountInput?.username}
+            value={accountInput?.username || ""}
             onChange={usernameChangeHandler}
             type="text"
           ></Input>
@@ -79,7 +91,7 @@ const AccountInformationPage = ({
         <FormControl>
           <FormLabel>Email</FormLabel>
           <Input
-            value={accountInput?.email}
+            value={accountInput?.email || ""}
             onChange={emailChangeHandler}
             type="text"
           ></Input>
@@ -87,25 +99,31 @@ const AccountInformationPage = ({
         <FormControl>
           <FormLabel>Password</FormLabel>
           <Input
-            value={accountInput?.password}
+            value={accountInput?.password || ""}
             onChange={passwordChangeHandler}
             type="password"
           ></Input>
         </FormControl>
         <FormControl>
           <div className="flex gap-4">
-            <Button onClick={onOpen} type="outlined" className="rounded-full">
+            <Buttons
+              onClick={onOpen}
+              colorScheme="blue"
+              variant="outline"
+              className="rounded-full"
+            >
               Back
-            </Button>
-            <Button
+            </Buttons>
+            <Buttons
               onClick={() => {
                 setActiveStep(2);
               }}
-              type="primary"
+              isDisabled={!validateInput()}
+              colorScheme="blue"
               className="rounded-full"
             >
               Next
-            </Button>
+            </Buttons>
           </div>
         </FormControl>
       </AuthForm>

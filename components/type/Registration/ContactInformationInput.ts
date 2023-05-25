@@ -1,4 +1,4 @@
-export default interface ContactInformationInput {
+export interface ContactInformationInput {
   fullname: string;
   username: string;
   email: string;

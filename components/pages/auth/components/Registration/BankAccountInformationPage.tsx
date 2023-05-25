@@ -1,6 +1,11 @@
-import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Button,
+  Input,
+  Select,
+} from "@chakra-ui/react";
 import AuthForm from "../AuthForm";
-import Button from "@/components/common/Button";
 import {
   Bank,
   BankAccountInput,
@@ -18,13 +23,24 @@ const BankAccountInformationPage = ({
   setBankInput: Dispatch<SetStateAction<BankAccountInput>>;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }) => {
+  
+  const validateInput = () => {
+    if (!bankInput) return false;
+
+    const { name, accountNumber } = bankInput;
+
+    if (!name || name === "") return false;
+    if (!accountNumber || accountNumber == "") return false;
+    return true;
+  };
+
   return (
     <>
       <AuthForm>
         <FormControl>
           <FormLabel>Bank Provider</FormLabel>
           <Select
-            value={bankInput?.name}
+            value={bankInput?.name || ""}
             onChange={(e) => {
               try {
                 const name = e.currentTarget.value;
@@ -47,7 +63,7 @@ const BankAccountInformationPage = ({
         <FormControl>
           <FormLabel>Account Number</FormLabel>
           <Input
-            value={bankInput?.accountNumber}
+            value={bankInput?.accountNumber || ""}
             onChange={(e) => {
               const accountNumber = e.currentTarget.value;
               setBankInput({ ...bankInput, accountNumber: accountNumber });
@@ -61,7 +77,8 @@ const BankAccountInformationPage = ({
               onClick={() => {
                 setActiveStep(1);
               }}
-              type="outlined"
+              variant="outline"
+              colorScheme="blue"
               className="rounded-full"
             >
               Prev
@@ -70,7 +87,8 @@ const BankAccountInformationPage = ({
               onClick={() => {
                 setActiveStep(3);
               }}
-              type="primary"
+              isDisabled={!validateInput()}
+              colorScheme="blue"
               className="rounded-full"
             >
               Next

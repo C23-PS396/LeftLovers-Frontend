@@ -24,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import AuthForm from "../AuthForm";
-import Button from "@/components/common/Button";
 import {
   ChangeEvent,
   Dispatch,
@@ -39,10 +38,12 @@ import useCustomToast from "@/components/utils/useCustomToast";
 
 const AddFoodPage = ({
   foodInput,
+  submitForm,
   setFoodInput,
   setActiveStep,
 }: {
   foodInput: FoodInput[];
+  submitForm: () => void;
   setFoodInput: Dispatch<SetStateAction<FoodInput[]>>;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }) => {
@@ -202,20 +203,25 @@ const AddFoodPage = ({
         </FormControl>
         <FormControl>
           <div className="flex gap-4">
-            <Button
-              type="outlined"
+            <Buttons
+              colorScheme="blue"
+              variant="outline"
               onClick={() => {
                 setActiveStep(3);
               }}
             >
               Prev
-            </Button>
-            <Button type="success" onClick={onOpen}>
+            </Buttons>
+            <Buttons onClick={onOpen} colorScheme="green">
               Add Food
-            </Button>
-            <Button type="primary" onClick={() => {}}>
+            </Buttons>
+            <Buttons
+              colorScheme="blue"
+              isDisabled={foodInput.length === 0}
+              onClick={submitForm}
+            >
               Submit
-            </Button>
+            </Buttons>
           </div>
         </FormControl>
       </AuthForm>
@@ -261,7 +267,7 @@ const AddFoodPage = ({
                 type="number"
                 onChange={(e) => {
                   const price = e.currentTarget.value as unknown as number;
-                  setFood({ ...(food as FoodInput), price: price });
+                  setFood({ ...(food as FoodInput), price: price as number });
                 }}
               />
               <FormHelperText>

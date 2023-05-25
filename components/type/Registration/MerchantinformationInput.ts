@@ -7,6 +7,14 @@ export interface MerchantInformationInput {
   fullLocation: string;
 }
 
+export interface LocationRequest {
+  province: String;
+  regency: String;
+  district: String;
+  village: String;
+  fullLocation: String;
+}
+
 export interface Province {
   id: string;
   name: string;

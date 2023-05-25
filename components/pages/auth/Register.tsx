@@ -25,6 +25,7 @@ import {
 } from "@/components/type/Registration/BankAccountInput";
 import {
   District,
+  LocationRequest,
   MerchantInformationInput,
   Province,
   Regency,
@@ -32,9 +33,14 @@ import {
 } from "@/components/type/Registration/MerchantinformationInput";
 import BankAccountInformationPage from "./components/Registration/BankAccountInformationPage";
 import MerchantInformationPage from "./components/Registration/MerchantInformationPage";
-import ContactInformationInput from "@/components/type/Registration/ContactInformationInput";
+import { ContactInformationInput } from "@/components/type/Registration/ContactInformationInput";
 import AddFoodPage from "./components/Registration/AddFoodPage";
 import { FoodInput } from "@/components/type/Registration/FoodInput";
+import useCustomToast from "@/components/utils/useCustomToast";
+import {
+  AuthContextState,
+  useAuthContext,
+} from "@/components/context/AuthContext";
 
 const steps = [
   { title: "First", description: "Contact Info" },
@@ -49,11 +55,13 @@ const Register = () => {
     count: steps.length,
   });
   const router = useRouter();
+  const toast = useCustomToast();
   const [bank, setBank] = useState<Bank[]>([]);
   const [province, setProvince] = useState<Province[]>([]);
   const [regency, setRegency] = useState<Regency[]>([]);
   const [district, setDistrict] = useState<District[]>([]);
   const [village, setVillage] = useState<Village[]>([]);
+  const { login }: AuthContextState = useAuthContext() as AuthContextState;
 
   const [accountInput, setAccountInput] = useState<ContactInformationInput>();
   const [bankInput, setBankInput] = useState<BankAccountInput>();
@@ -119,6 +127,71 @@ const Register = () => {
     getBank();
     getProvince();
   }, []);
+
+  const submitForm = async () => {
+    toast({
+      title: "Wait a moment",
+      message: "We still checking your data",
+      type: "info",
+    });
+    try {
+      // Add Seller Account
+      const resAccount = await axios.post("/api/auth/signup", {
+        fullname: accountInput?.fullname,
+        username: accountInput?.username,
+        password: accountInput?.password,
+        email: accountInput?.email,
+      });
+      const { id: sellerId } = resAccount.data.data;
+      const { token } = resAccount.data;
+
+      // Add Bank Account
+      await axios.post("/api/bank", {
+        sellerId: sellerId,
+        accounts: [bankInput],
+      });
+
+      // Add Location
+      const locatonRequest: LocationRequest = {
+        province: merchantInput?.province.name as string,
+        regency: merchantInput?.regency.name as string,
+        district: merchantInput?.district.name as string,
+        village: merchantInput?.village.name as string,
+        fullLocation: merchantInput?.fullLocation as string,
+      };
+      const resLocation = await axios.post("/api/location", {
+        location: locatonRequest,
+      });
+      const { id: locationId } = resLocation.data.location;
+
+      // Add Merchant
+      const resMerchant = await axios.post("/api/merchant", {
+        name: merchantInput?.name,
+        locationId: locationId,
+        sellerId: sellerId,
+      });
+      const { id: merchantId } = resMerchant.data.data;
+
+      // Add food
+      await axios.post("/api/food", {
+        merchantId: merchantId,
+        foods: foodInput,
+      });
+
+      toast({
+        title: "Registration success!",
+        message: "You have been succesfully registered as our partner!",
+        type: "success",
+      });
+      login(token);
+    } catch (error) {
+      toast({
+        title: "Registration failed!",
+        message: "There is an error occurred",
+        type: "error",
+      });
+    }
+  };
 
   return (
     <div className="w-full min-h-screen px-2 py-8 flex flex-col items-center gap-8 mt-12 box-border">
@@ -197,6 +270,7 @@ const Register = () => {
             setActiveStep={setActiveStep}
             foodInput={foodInput}
             setFoodInput={setFoodInput}
+            submitForm={submitForm}
           ></AddFoodPage>
         )}
       </div>

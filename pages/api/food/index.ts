@@ -5,17 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
-    try {
-      const result = await axios.get(`${process.env.API_URL}/bank`);
-      return res.status(200).json(result.data);
-    } catch (error: any) {
-      return res.status(error.response.status).json(error.response.statusText);
-    }
-  } else if (req.method === "POST") {
-    let { sellerId, accounts } = req.body;
-    accounts[0]["swiftCode"] = accounts[0].swift_code;
-    delete accounts[0].swift_code;
+  if (req.method === "POST") {
+    const { merchantId, foods } = req.body;
     const { cookies } = req;
     const token = cookies.authToken;
 
@@ -25,10 +16,10 @@ export default async function handler(
 
     try {
       const response = await axios.post(
-        `${process.env.API_URL}/bank`,
+        `${process.env.API_URL}/food/create`,
         {
-          sellerId: sellerId,
-          accounts: accounts,
+          merchantId: merchantId,
+          foods: foods,
         },
         config
       );

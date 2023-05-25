@@ -1,6 +1,11 @@
-import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Button as Buttons,
+} from "@chakra-ui/react";
 import AuthForm from "../AuthForm";
-import Button from "@/components/common/Button";
 import { Dispatch, SetStateAction } from "react";
 import {
   District,
@@ -27,13 +32,29 @@ const MerchantInformationPage = ({
   setMerchantInput: Dispatch<SetStateAction<MerchantInformationInput>>;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }) => {
+  const validateInput = () => {
+    if (!merchantInput) return false;
+
+    const { name, province, regency, district, village, fullLocation } =
+      merchantInput;
+
+    if (!name) return false;
+    if (!province) return false;
+    if (!regency) return false;
+    if (!district) return false;
+    if (!village) return false;
+    if (!fullLocation) return false;
+
+    return true;
+  };
+
   return (
     <>
       <AuthForm>
         <FormControl>
           <FormLabel>Merchant Name</FormLabel>
           <Input
-            value={merchantInput?.name}
+            value={merchantInput?.name || ""}
             onChange={(e) => {
               const name = e.currentTarget.value;
               setMerchantInput({ ...merchantInput, name: name });
@@ -46,7 +67,7 @@ const MerchantInformationPage = ({
             <FormLabel>Province</FormLabel>
             <Select
               placeholder="Select Province"
-              value={merchantInput?.province?.id}
+              value={merchantInput?.province?.id || ""}
               onChange={(e) => {
                 try {
                   const id = e.currentTarget.value;
@@ -74,7 +95,7 @@ const MerchantInformationPage = ({
             <FormLabel>Regency</FormLabel>
             <Select
               placeholder="Select Regency"
-              value={merchantInput?.regency?.id}
+              value={merchantInput?.regency?.id || ""}
               onChange={(e) => {
                 try {
                   const id = e.currentTarget.value;
@@ -104,7 +125,7 @@ const MerchantInformationPage = ({
             <FormLabel>District</FormLabel>
             <Select
               placeholder="Select District"
-              value={merchantInput?.district?.id}
+              value={merchantInput?.district?.id || ""}
               onChange={(e) => {
                 try {
                   const id = e.currentTarget.value;
@@ -132,7 +153,7 @@ const MerchantInformationPage = ({
             <FormLabel>Village</FormLabel>
             <Select
               placeholder="Select Village"
-              value={merchantInput?.village?.id}
+              value={merchantInput?.village?.id || ""}
               onChange={(e) => {
                 try {
                   const id = e.currentTarget.value;
@@ -160,7 +181,7 @@ const MerchantInformationPage = ({
         <FormControl>
           <FormLabel>Streets</FormLabel>
           <Input
-            value={merchantInput?.fullLocation}
+            value={merchantInput?.fullLocation || ""}
             onChange={(e) => {
               const name = e.currentTarget.value;
               setMerchantInput({ ...merchantInput, fullLocation: name });
@@ -170,24 +191,24 @@ const MerchantInformationPage = ({
         </FormControl>
         <FormControl>
           <div className="flex gap-4 w-full">
-            <Button
+            <Buttons
               onClick={() => {
                 setActiveStep(2);
               }}
-              type="outlined"
-              className="rounded-full"
+              variant="outline"
+              colorScheme="blue"
             >
               Prev
-            </Button>
-            <Button
+            </Buttons>
+            <Buttons
               onClick={() => {
                 setActiveStep(4);
               }}
-              type="primary"
-              className="rounded-full"
+              colorScheme="blue"
+              isDisabled={!validateInput()}
             >
               Next
-            </Button>
+            </Buttons>
           </div>
         </FormControl>
       </AuthForm>
