@@ -11,7 +11,8 @@ export function middleware(req: NextRequest, _ev: NextFetchEvent) {
   if (
     (url.pathname.includes("auth/login") ||
       url.pathname.includes("auth/register")) &&
-    authToken
+    authToken &&
+    req.method === "POST"
   ) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

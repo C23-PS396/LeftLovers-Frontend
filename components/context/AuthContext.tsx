@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   Dispatch,
   SetStateAction,
@@ -48,14 +49,14 @@ export const AuthContextProvider = ({
   const [authStatus, setAuthStatus] = useState(AuthStatus.NOT_AUTHENTICATED);
   const router = useRouter();
 
-  useEffect(() => {
+  const initAuth = async () => {
     setLoggingIn(true);
-    async function initAuth() {
-      await authenticate();
-      setLoggingIn(false);
-    }
+    await authenticate();
+    setLoggingIn(false);
+  };
+
+  useEffect(() => {
     initAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = (token: string) => {
@@ -69,26 +70,32 @@ export const AuthContextProvider = ({
     await axios.post("/api/auth/logout");
     setUser(null);
     setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
-    router.push("/");
   };
 
   const authenticate = async () => {
-    const result = await axios.get("/api/auth/login");
-    const tokenStatus = result.data.message;
-    if (tokenStatus === "TOKEN_UNVERIFIED") {
+    try {
+      const result = await axios.get("/api/auth/login");
+      const tokenStatus = result.data.message;
+      if (tokenStatus === "TOKEN_UNVERIFIED") {
+        await logout();
+        setAuthStatus(AuthStatus.TOKEN_UNVERIFIED);
+        return AuthStatus.TOKEN_UNVERIFIED;
+      } else if (tokenStatus === "TOKEN_DOES_NOT_EXIST") {
+        await logout();
+        setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
+        return AuthStatus.NOT_AUTHENTICATED;
+      } else {
+        if (!user) {
+          const user = jwt<User>(tokenStatus);
+          setUser(user);
+        }
+        setAuthStatus(AuthStatus.AUTHENTICATED);
+        return AuthStatus.AUTHENTICATED;
+      }
+    } catch (err: any) {
       await logout();
       setAuthStatus(AuthStatus.TOKEN_UNVERIFIED);
       return AuthStatus.TOKEN_UNVERIFIED;
-    } else if (tokenStatus === "TOKEN_DOES_NOT_EXIST") {
-      setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
-      return AuthStatus.NOT_AUTHENTICATED;
-    } else {
-      if (!user) {
-        const user = jwt<User>(tokenStatus);
-        setUser(user);
-      }
-      setAuthStatus(AuthStatus.AUTHENTICATED);
-      return AuthStatus.AUTHENTICATED;
     }
   };
 
