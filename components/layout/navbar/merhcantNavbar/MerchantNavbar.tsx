@@ -76,6 +76,11 @@ const MerchantNavbar = () => {
               Overview
             </Text>
           </Link>
+          <Link href="/dashboard/food">
+            <Text fontSize="lg" color="#7F8A96">
+              Food
+            </Text>
+          </Link>
           <Link href="/dashboard/order">
             <Text fontSize="lg" color="#7F8A96">
               Order
