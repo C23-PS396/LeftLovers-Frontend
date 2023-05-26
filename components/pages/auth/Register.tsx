@@ -41,6 +41,7 @@ import {
   AuthContextState,
   useAuthContext,
 } from "@/components/context/AuthContext";
+import useWindowSize from "@/components/hook/useWindowSize";
 
 const steps = [
   { title: "First", description: "Contact Info" },
@@ -62,6 +63,7 @@ const Register = () => {
   const [district, setDistrict] = useState<District[]>([]);
   const [village, setVillage] = useState<Village[]>([]);
   const { login }: AuthContextState = useAuthContext() as AuthContextState;
+  const { width } = useWindowSize();
 
   const [accountInput, setAccountInput] = useState<ContactInformationInput>();
   const [bankInput, setBankInput] = useState<BankAccountInput>();
@@ -211,22 +213,41 @@ const Register = () => {
         </Text>
       </HeaderWrapper>
       <Stepper size="lg" index={activeStep}>
-        {steps.map((step, index) => (
-          <Step key={index}>
-            <StepIndicator>
-              <StepStatus
-                complete={<StepIcon />}
-                incomplete={<StepNumber />}
-                active={<StepNumber />}
-              />
-            </StepIndicator>
-            <Box flexShrink="0">
-              <StepTitle>{step.title}</StepTitle>
-              <StepDescription>{step.description}</StepDescription>
-            </Box>
-            <StepSeparator />
-          </Step>
-        ))}
+        {steps.map((step, index) =>
+          width < 678 ? (
+            index === activeStep - 1 && (
+              <Step key={index}>
+                <StepIndicator>
+                  <StepStatus
+                    complete={<StepIcon />}
+                    incomplete={<StepNumber />}
+                    active={<StepNumber />}
+                  />
+                </StepIndicator>
+                <Box flexShrink="0">
+                  <StepTitle>{step.title}</StepTitle>
+                  <StepDescription>{step.description}</StepDescription>
+                </Box>
+                <StepSeparator />
+              </Step>
+            )
+          ) : (
+            <Step key={index}>
+              <StepIndicator>
+                <StepStatus
+                  complete={<StepIcon />}
+                  incomplete={<StepNumber />}
+                  active={<StepNumber />}
+                />
+              </StepIndicator>
+              <Box flexShrink="0">
+                <StepTitle>{step.title}</StepTitle>
+                <StepDescription>{step.description}</StepDescription>
+              </Box>
+              <StepSeparator />
+            </Step>
+          )
+        )}
       </Stepper>
       <div className="max-w-[700px] w-full">
         {activeStep === 1 && (
