@@ -47,7 +47,7 @@ const steps = [
   { title: "First", description: "Contact Info" },
   { title: "Second", description: "Bank Account" },
   { title: "Third", description: "Merchant" },
-  { title: "Fourt", description: "Add Some Food" },
+  { title: "Fourth", description: "Add Some Food" },
 ];
 
 const Register = () => {

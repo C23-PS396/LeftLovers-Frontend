@@ -1,38 +1,45 @@
 import Container from "@/components/common/Container";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import FoodCard from "./components/FoodCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { A11y, Navigation, Pagination, Scrollbar } from "swiper";
+import "swiper/css/autoplay";
+import { A11y, Autoplay, Navigation, Pagination, Scrollbar } from "swiper";
 import useWindowSize from "@/components/hook/useWindowSize";
 import ActiveFoodCard from "./components/ActiveFoodCard";
+import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
+import { useRouter } from "next/router";
 
 const Food = () => {
-  const arr = [1, 2, 3, 4, 5, 6];
-  const arr2 = [1, 2, 3, 4, 5, 6, 7, 8];
+  const arr = [1, 2, 3, 4];
+  const { foods } = useMerchantDataContext() as MerchantDataContextState;
   const { width } = useWindowSize();
+  const router = useRouter();
+
   return (
     <Container className="bg-[#F1F5F9]">
       <div className="flex flex-col">
-        <Heading color="#414D55">Active Food</Heading>
+        <Heading color="#414D55">Available Food</Heading>
         <div className="flex flex-wrap w-full gap-6 mt-4">
           <Swiper
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+            autoplay={{ delay: 1500 }}
             spaceBetween={50}
-            slidesPerView={width < 768 ? 1 : 3}
+            slidesPerView={width < 768 ? 1 : arr.length > 3 ? 3 : 1}
             navigation
             pagination={{ clickable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
             loop={true}
             onSlideChange={(swiper) => {
               const mod = swiper.activeIndex % arr.length;
               swiper.slideTo(mod);
             }}
-            className="sm:!py-12"
+            className={arr.length > 3 ? "sm:!py-12" : ""}
           >
             {arr.map((el) => {
               return (
@@ -45,11 +52,24 @@ const Food = () => {
         </div>
       </div>
       <div className="mt-8">
-        <Heading color="#414D55">Your Food</Heading>
+        <div className="flex justify-between w-full items-center">
+          <Heading color="#414D55">Your Food</Heading>
+          <Text
+            color="#2C65F1"
+            fontWeight="bold"
+            cursor="pointer"
+            onClick={() => {
+              router.push("/dashboard/food/add-food");
+            }}
+          >
+            Add Food
+          </Text>
+        </div>
         <div className="flex flex-wrap w-full gap-6 mt-4">
-          {arr2.map((el) => {
-            return <FoodCard key={el} />;
-          })}
+          {foods &&
+            foods.map((foodItem) => {
+              return <FoodCard key={foodItem.id} food={foodItem} />;
+            })}
         </div>
       </div>
     </Container>

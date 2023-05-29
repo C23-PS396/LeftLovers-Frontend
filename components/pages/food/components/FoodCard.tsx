@@ -1,6 +1,8 @@
+import { Food } from "@/components/context/MerchantDataContext";
+import formatter from "@/components/utils/rupiahFormatter";
 import { Card, CardBody, Heading, Image, Stack, Text } from "@chakra-ui/react";
 
-const FoodCard = () => {
+const FoodCard = ({ food }: { food: Food }) => {
   return (
     <Card className={`basis-[300px] grow`}>
       <CardBody>
@@ -10,9 +12,22 @@ const FoodCard = () => {
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
-          <Heading size="md">Sate Ayam</Heading>
+          <Heading size="md">{food.name}</Heading>\
+          <div className="flex gap-2 flex-wrap">
+            {food.category.map((categoryItem) => {
+              return (
+                <div
+                  className="rounded-lg px-2 py-1 bg-[#EEE] text-[0.7rem]"
+                  key={categoryItem.id}
+                >
+                  {" "}
+                  {categoryItem.name}
+                </div>
+              );
+            })}
+          </div>
           <Text color="blue.600" fontSize="2xl">
-            Rp450.000
+            {formatter.format(food.price)}
           </Text>
         </Stack>
       </CardBody>

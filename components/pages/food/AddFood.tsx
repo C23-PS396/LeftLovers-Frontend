@@ -1,52 +1,41 @@
+import { Category, FoodInput } from "@/components/type/Registration/FoodInput";
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
   FormControl,
-  Button as Buttons,
+  FormHelperText,
   FormLabel,
   Heading,
   Image,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Skeleton,
   Stack,
   Text,
-  Skeleton,
   Wrap,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Input,
-  ModalFooter,
   useDisclosure,
-  FormHelperText,
 } from "@chakra-ui/react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Dropzone } from "../auth/components/Registration/AddFoodPage";
 import { CheckIcon } from "@chakra-ui/icons";
-import AuthForm from "../AuthForm";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Category, FoodInput } from "@/components/type/Registration/FoodInput";
-import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
+import axios from "axios";
+import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
+import { useRouter } from "next/router";
+import Container from "@/components/common/Container";
 
-const AddFoodPage = ({
-  foodInput,
-  submitForm,
-  setFoodInput,
-  setActiveStep,
-}: {
-  foodInput: FoodInput[];
-  submitForm: () => void;
-  setFoodInput: Dispatch<SetStateAction<FoodInput[]>>;
-  setActiveStep: Dispatch<SetStateAction<number>>;
-}) => {
+const AddFood = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
@@ -56,10 +45,14 @@ const AddFoodPage = ({
     price: 0,
     category: [],
   });
+  const [foodInput, setFoodInput] = useState<FoodInput[]>([]);
   const [categoryOption, setCategoryOption] = useState<Category[]>();
   const [categoryMatch, setCategoryMatch] = useState<Category[]>();
   const [searchedString, setSearchedString] = useState<String>("");
+  const { merchant, getFood } =
+    useMerchantDataContext() as MerchantDataContextState;
   const toast = useCustomToast();
+  const router = useRouter();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -95,136 +88,159 @@ const AddFoodPage = ({
     }
   }, [categoryOption, searchedString]);
 
+  const submitFood = async () => {
+    try {
+      await axios.post("/api/food", {
+        merchantId: merchant?.id,
+        foods: foodInput,
+      });
+
+      await getFood();
+
+      toast({
+        type: "success",
+        message: "Success!",
+        title: "Food has successfully registered",
+      });
+    } catch (error: any) {
+      toast({
+        type: "error",
+        message: "Failed to register you food",
+        title: "Error occurred while registering food",
+      });
+    }
+    router.push("/dashboard/food");
+  };
+
   return (
-    <>
-      <AuthForm>
-        <FormControl>
-          <FormLabel>Food List</FormLabel>
-          <div className="flex flex-col gap-2">
-            {foodInput.map((food) => {
-              return (
-                <div key={food.name}>
-                  <Card
-                    direction={{ base: "column", sm: "row" }}
-                    overflow="hidden"
-                    variant="outline"
-                  >
-                    <Image
-                      objectFit="cover"
-                      maxW={{ base: "100%", sm: "200px" }}
-                      src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-                      alt="Caffe Latte"
-                    />
-                    <Stack>
-                      <CardBody gap={2} display="flex" flexDirection="column">
-                        <Heading size="md">{food.name}</Heading>
-                        <div className="flex gap-2 flex-wrap">
-                          {food.category.map((categoryItem) => {
-                            return (
-                              <div
-                                className="rounded-lg px-2 py-1 bg-[#EEE] text-[0.7rem]"
-                                key={categoryItem}
-                              >
-                                {" "}
-                                {categoryItem}
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <Text py="2">Rp{food.price}</Text>
-                      </CardBody>
-                      <CardFooter>
-                        <Buttons
-                          variant="solid"
-                          colorScheme="red"
-                          onClick={() => {
-                            const idx = foodInput.findIndex(
-                              (curFood) => curFood.name === food.name
-                            );
-                            const newFoodInput = foodInput.slice();
-                            newFoodInput.splice(idx, 1);
-                            setFoodInput(newFoodInput);
-                          }}
-                        >
-                          Remove
-                        </Buttons>
-                      </CardFooter>
-                    </Stack>
-                  </Card>
-                </div>
-              );
-            })}
-          </div>
-          {foodInput.length === 0 && (
-            <>
-              <Wrap display="flex" flexDirection="column" textAlign="center">
-                <Text textAlign="center" width="full" fontWeight="bold">
-                  Add your food first!
-                </Text>
+    <Container className="max-w-[800px] w-full mx-auto">
+      <FormControl>
+        <Heading>Food List</Heading>
+        <div className="flex flex-col gap-2">
+          {foodInput.map((food) => {
+            return (
+              <div key={food.name}>
                 <Card
                   direction={{ base: "column", sm: "row" }}
                   overflow="hidden"
                   variant="outline"
                 >
-                  <Skeleton>
-                    <Image
-                      objectFit="cover"
-                      maxW={{ base: "100%", sm: "200px" }}
-                      src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-                      alt="Caffe Latte"
-                    />
-                  </Skeleton>
-
+                  <Image
+                    objectFit="cover"
+                    maxW={{ base: "100%", sm: "200px" }}
+                    src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                    alt="Caffe Latte"
+                  />
                   <Stack>
                     <CardBody gap={2} display="flex" flexDirection="column">
-                      <Skeleton>
-                        <Heading size="md">The perfect latte</Heading>
-                      </Skeleton>
-                      <Skeleton>
-                        <Text py="2">
-                          Caffè latte is a coffee beverage of Italian origin
-                          made with espresso and steamed milk.
-                        </Text>
-                      </Skeleton>
+                      <Heading size="md">{food.name}</Heading>
+                      <div className="flex gap-2 flex-wrap">
+                        {food.category.map((categoryItem) => {
+                          return (
+                            <div
+                              className="rounded-lg px-2 py-1 bg-[#EEE] text-[0.7rem]"
+                              key={categoryItem}
+                            >
+                              {" "}
+                              {categoryItem}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <Text py="2">Rp{food.price}</Text>
                     </CardBody>
-
                     <CardFooter>
-                      <Skeleton>
-                        <Buttons variant="solid" colorScheme="red">
-                          Remove
-                        </Buttons>
-                      </Skeleton>
+                      <Button
+                        variant="solid"
+                        colorScheme="red"
+                        onClick={() => {
+                          const idx = foodInput.findIndex(
+                            (curFood) => curFood.name === food.name
+                          );
+                          const newFoodInput = foodInput.slice();
+                          newFoodInput.splice(idx, 1);
+                          setFoodInput(newFoodInput);
+                        }}
+                      >
+                        Remove
+                      </Button>
                     </CardFooter>
                   </Stack>
                 </Card>
-              </Wrap>
-            </>
-          )}
-        </FormControl>
-        <FormControl>
-          <div className="flex gap-4">
-            <Buttons
-              colorScheme="blue"
-              variant="outline"
-              onClick={() => {
-                setActiveStep(3);
-              }}
-            >
-              Prev
-            </Buttons>
-            <Buttons onClick={onOpen} colorScheme="green">
-              Add Food
-            </Buttons>
-            <Buttons
-              colorScheme="blue"
-              isDisabled={foodInput.length === 0}
-              onClick={submitForm}
-            >
-              Submit
-            </Buttons>
-          </div>
-        </FormControl>
-      </AuthForm>
+              </div>
+            );
+          })}
+        </div>
+        {foodInput.length === 0 && (
+          <>
+            <Wrap display="flex" flexDirection="column" textAlign="center">
+              <Text textAlign="center" width="full" fontWeight="bold">
+                Add your food first!
+              </Text>
+              <Card
+                direction={{ base: "column", sm: "row" }}
+                overflow="hidden"
+                variant="outline"
+                width="full"
+              >
+                <Skeleton>
+                  <Image
+                    objectFit="cover"
+                    maxW={{ base: "100%", sm: "200px" }}
+                    src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                    alt="Caffe Latte"
+                  />
+                </Skeleton>
+
+                <Stack>
+                  <CardBody gap={2} display="flex" flexDirection="column">
+                    <Skeleton>
+                      <Heading size="md">The perfect latte</Heading>
+                    </Skeleton>
+                    <Skeleton>
+                      <Text py="2">
+                        Caffè latte is a coffee beverage of Italian origin made
+                        with espresso and steamed milk.
+                      </Text>
+                    </Skeleton>
+                  </CardBody>
+
+                  <CardFooter>
+                    <Skeleton>
+                      <Button variant="solid" colorScheme="red">
+                        Remove
+                      </Button>
+                    </Skeleton>
+                  </CardFooter>
+                </Stack>
+              </Card>
+            </Wrap>
+          </>
+        )}
+      </FormControl>
+      <FormControl>
+        <div className="flex gap-4 mt-4">
+          <Button
+            colorScheme="red"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            Back
+          </Button>
+          <Button onClick={onOpen} colorScheme="green">
+            Add Food
+          </Button>
+          <Button
+            colorScheme="blue"
+            isDisabled={foodInput.length === 0}
+            onClick={submitFood}
+          >
+            Submit
+          </Button>
+        </div>
+      </FormControl>
+
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -304,7 +320,7 @@ const AddFoodPage = ({
                     setSearchedString(e.currentTarget.value);
                   }}
                 />
-                <Buttons
+                <Button
                   colorScheme="green"
                   isDisabled={searchedString === "" || !searchedString}
                   onClick={() => {
@@ -335,7 +351,7 @@ const AddFoodPage = ({
                   }}
                 >
                   <CheckIcon />
-                </Buttons>
+                </Button>
               </div>
               <div className="flex flex-wrap gap-2 mt-1">
                 {(searchedString !== "" || searchedString) &&
@@ -380,7 +396,7 @@ const AddFoodPage = ({
           </ModalBody>
 
           <ModalFooter>
-            <Buttons
+            <Button
               colorScheme="blue"
               mr={3}
               isDisabled={!food.name || !food.price}
@@ -399,66 +415,13 @@ const AddFoodPage = ({
               }}
             >
               Save
-            </Buttons>
-            <Buttons onClick={onClose}>Cancel</Buttons>
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Container>
   );
 };
 
-export const Dropzone = ({
-  selectedFiles,
-  handleFileChange,
-  setSelectedFiles,
-}: {
-  selectedFiles: File | null;
-  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  setSelectedFiles: Dispatch<SetStateAction<File | null>>;
-}) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const removeFileHandler = () => {
-    setSelectedFiles(null);
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  };
-
-  return (
-    <label htmlFor="input">
-      <div className="w-full h-[100px] rounded-lg border-2 border-dashed flex items-center justify-center">
-        {selectedFiles ? (
-          <div className="flex flex-col gap-2 text-center">
-            <p className="text-[0.8rem] text-[#999]">{selectedFiles.name}</p>
-            <div
-              className="text-[0.8rem] text-[#CC252E] z-100 cursor-pointer"
-              onClick={removeFileHandler}
-            >
-              Remove
-            </div>
-          </div>
-        ) : (
-          <>
-            <p className="text-[0.8rem] text-[#999]">
-              Drop you file here, or select from{" "}
-              <span className="text-[#537FE7] cursor-pointer">
-                your desktop
-              </span>
-            </p>
-          </>
-        )}
-      </div>
-      <input
-        type="file"
-        id="input"
-        className="hidden"
-        ref={inputRef}
-        onChange={handleFileChange}
-      ></input>
-    </label>
-  );
-};
-
-export default AddFoodPage;
+export default AddFood;
