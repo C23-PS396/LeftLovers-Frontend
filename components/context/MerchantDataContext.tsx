@@ -36,6 +36,15 @@ export interface Food {
   updatedAt: Date;
   createdAt: Date;
   category: Category[];
+  activeFood: ActiveFood;
+}
+
+export interface ActiveFood {
+  isActive: boolean;
+  stock: number;
+  durationInSecond: 7200;
+  startTime: Date;
+  endTime: Date;
 }
 
 export interface Category {
@@ -89,7 +98,6 @@ export const MerchantDataContextProvider = ({
     });
 
     const { data } = response.data.data;
-    console.log(data, typeof data);
     setFoods(data);
   };
 

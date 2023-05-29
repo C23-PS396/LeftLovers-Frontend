@@ -1,8 +1,8 @@
 import Navbar from "@/components/layout/navbar/Navbar";
+import Order from "@/components/pages/order/Order";
 import Head from "next/head";
 
 export default function DashboardOrder() {
-
   return (
     <>
       <Head>
@@ -19,6 +19,7 @@ export default function DashboardOrder() {
         />
       </Head>
       <Navbar type="merchant" />
+      <Order />
     </>
   );
 }
