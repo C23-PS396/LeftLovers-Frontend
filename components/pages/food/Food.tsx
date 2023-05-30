@@ -47,7 +47,7 @@ const Food = () => {
           className="rounded-full"
         />
         <TabPanels color="#414D55">
-          <TabPanel>
+          <TabPanel px={0}>
             <div className="flex flex-wrap w-full gap-6 mt-4">
               {foods &&
                 foods.map((foodItem) => {
@@ -55,7 +55,7 @@ const Food = () => {
                 })}
             </div>
           </TabPanel>
-          <TabPanel>
+          <TabPanel px={0}>
             <div className="flex flex-wrap w-full gap-6 mt-4">
               {foods &&
                 foods.map((foodItem) => {
