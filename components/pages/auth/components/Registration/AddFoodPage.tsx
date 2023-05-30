@@ -27,6 +27,7 @@ import AuthForm from "../AuthForm";
 import {
   ChangeEvent,
   Dispatch,
+  MouseEvent,
   SetStateAction,
   useEffect,
   useRef,
@@ -419,7 +420,8 @@ export const Dropzone = ({
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const removeFileHandler = () => {
+  const removeFileHandler = (e: any) => {
+    e.preventDefault();
     setSelectedFiles(null);
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -434,7 +436,9 @@ export const Dropzone = ({
             <p className="text-[0.8rem] text-[#999]">{selectedFiles.name}</p>
             <div
               className="text-[0.8rem] text-[#CC252E] z-100 cursor-pointer"
-              onClick={removeFileHandler}
+              onClick={(e) => {
+                removeFileHandler(e);
+              }}
             >
               Remove
             </div>
