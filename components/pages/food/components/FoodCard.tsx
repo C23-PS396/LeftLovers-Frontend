@@ -132,7 +132,7 @@ const FoodCard = ({ food }: { food: Food }) => {
               </FormControl>
               <FormControl>
                 <FormLabel fontWeight="bold" fontSize="0.9rem">
-                  Duration (inHour)
+                  Duration (in Hour)
                 </FormLabel>
                 <NumberInput>
                   <NumberInputField
