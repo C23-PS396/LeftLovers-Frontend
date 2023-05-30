@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { AuthContextProvider } from "@/components/context/AuthContext";
 import { MerchantDataContextProvider } from "@/components/context/MerchantDataContext";
 
-const colors = {
+export const colors = {
   brand: {
     900: "#1a365d",
     800: "#153e75",

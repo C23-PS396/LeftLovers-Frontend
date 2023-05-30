@@ -1,165 +1,86 @@
 import Container from "@/components/common/Container";
 import {
-  Button,
   Heading,
-  Table,
+  FormControl,
+  Select,
   TableContainer,
-  Tbody,
-  Td,
-  Th,
+  Table,
   Thead,
   Tr,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody,
+  Th,
+  Tbody,
+  Td,
 } from "@chakra-ui/react";
-import StatusWrapper, { STATUS } from "./components/StatusWrapper";
-import { CheckIcon, EditIcon } from "@chakra-ui/icons";
+import { STATUS } from "./components/StatusWrapper";
 import {
   MerchantDataContextState,
-  Transaction,
   useMerchantDataContext,
 } from "@/components/context/MerchantDataContext";
-import moment from "moment";
+import { useState } from "react";
+import OrderList from "./components/OrderList";
 
 const Order = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { transaction } = useMerchantDataContext() as MerchantDataContextState;
-
-  const getStatus = (transaction: Transaction) => {
-    if (transaction.status === STATUS.ACCEPT) {
-      return "Accept";
-    } else if (transaction.status === STATUS.DONE) {
-      return "Done";
-    } else if (transaction.status === STATUS.FAIL) {
-      return "Failed";
-    } else if (transaction.status === STATUS.PAID) {
-      return "Payment Confirmed";
-    } else if (transaction.status === STATUS.PAY) {
-      return "Paid";
-    } else if (transaction.status === STATUS.PENDING) {
-      return "Pending";
-    }
-  };
-
-  const getDateTime = (date: Date) => {
-    const formattedDateTime = moment(date).format("MMMM Do, YYYY, h:mm:ss A");
-    return formattedDateTime;
-  };
+  const [filter, setFilter] = useState<number>(0);
 
   return (
     <Container className="flex flex-col gap-4">
-      <Heading>Order</Heading>
+      <Heading color="#414D55">Order History</Heading>
+      <FormControl maxWidth={200}>
+        <Select
+          className="font-bold text-[#414D55]"
+          defaultValue={0}
+          onChange={(e) => {
+            setFilter(Number(e.currentTarget.value));
+          }}
+        >
+          <option value={0}>All Order</option>
+          <option value={STATUS.ACCEPT}>Accept</option>
+          <option value={STATUS.DONE}>Done</option>
+          <option value={STATUS.PAY}>Paid</option>
+          <option value={STATUS.PAID}>Payment Confirmed</option>
+          <option value={STATUS.PENDING}>Pending</option>
+          <option value={STATUS.FAIL}>Fail</option>
+        </Select>
+      </FormControl>
       <TableContainer bgColor="white">
-        <Table variant="striped">
-          <Thead>
+        <Table className="border-2 border-[#EDF2F7]" variant="striped">
+          <Thead className="bg-[#414D55]">
             <Tr>
-              <Th>Order ID</Th>
-              <Th>Date</Th>
-              <Th>Customer</Th>
-              <Th>Total price</Th>
-              <Th>Status</Th>
-              <Th>Action</Th>
+              <Th color="#FFF">Order ID</Th>
+              <Th color="#FFF">Date</Th>
+              <Th color="#FFF">Customer</Th>
+              <Th color="#FFF">Total price</Th>
+              <Th color="#FFF" className="!text-center">
+                Status
+              </Th>
+              <Th color="#FFF" className="!text-center">
+                Action
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
             {transaction?.map((transactionItem) => {
-              return (
-                <Tr
-                  key={transactionItem.id}
-                  onClick={onOpen}
-                  className="cursor-pointer"
-                >
-                  <Td>{transactionItem.id.toUpperCase().split("-")[0]}</Td>
-                  <Td>{getDateTime(transactionItem.createdAt)}</Td>
-                  <Td>
-                    {transactionItem.customer.fullname
-                      ? transactionItem.customer.fullname
-                      : transactionItem.customer.username}
-                  </Td>
-                  <Td>{transactionItem.totalprice}</Td>
-                  <Td>
-                    <StatusWrapper status={transactionItem.status}>
-                      {getStatus(transactionItem)}
-                    </StatusWrapper>
-                  </Td>
-                  <Td
-                    className="z-[50]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <Popover>
-                      <PopoverTrigger>
-                        <EditIcon color="blue.500" />
-                      </PopoverTrigger>
-                      <PopoverContent width="fit-content">
-                        <PopoverArrow />
-                        <PopoverCloseButton />
-                        <PopoverHeader>Action</PopoverHeader>
-                        <PopoverBody>
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              colorScheme="green"
-                              onClick={() => {}}
-                            >
-                              Accept
-                            </Button>
-                            <Button
-                              size="sm"
-                              colorScheme="red"
-                              onClick={() => {}}
-                            >
-                              Denied
-                            </Button>
-                          </div>
-                        </PopoverBody>
-                      </PopoverContent>
-                    </Popover>
-                  </Td>
-                </Tr>
-              );
+              if (filter === 0 || transactionItem.status === filter) {
+                return (
+                  <OrderList
+                    key={transactionItem.id}
+                    transactionItem={transactionItem}
+                  />
+                );
+              }
             })}
           </Tbody>
+          {transaction?.filter((transaction) => transaction.status == filter)
+            ?.length === 0 &&
+            filter !== 0 && (
+              <Tr className="flex items-center justify-start w-full h-[61px] text-[0.9rem] font-bold mx-auto">
+                <Td>Empth Row</Td>
+              </Tr>
+            )}
         </Table>
       </TableContainer>
-      <OrderModal isOpen={isOpen} onClose={onClose} />
     </Container>
-  );
-};
-
-const OrderModal = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
-        <ModalBody></ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
   );
 };
 
