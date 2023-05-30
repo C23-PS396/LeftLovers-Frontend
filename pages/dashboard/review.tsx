@@ -1,8 +1,8 @@
 import Navbar from "@/components/layout/navbar/Navbar";
+import Review from "@/components/pages/review/Review";
 import Head from "next/head";
 
 export default function DashboardReview() {
-
   return (
     <>
       <Head>
@@ -19,6 +19,7 @@ export default function DashboardReview() {
         />
       </Head>
       <Navbar type="merchant" />
+      <Review />
     </>
   );
 }
