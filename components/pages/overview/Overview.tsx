@@ -60,7 +60,7 @@ const Overview = () => {
       <CartWrapper>
         <div className="w-full lg:w-2/5 flex flex-col items-center lg:block">
           <Text color="#414D55" fontWeight="bold">
-            Trassaction Summary
+            Transaction Summary
           </Text>
           <DoughnutChart />
         </div>
