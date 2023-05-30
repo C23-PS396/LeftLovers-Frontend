@@ -37,10 +37,10 @@ const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
       return "Done";
     } else if (transaction.status === STATUS.FAIL) {
       return "Failed";
-    } else if (transaction.status === STATUS.PAID) {
-      return "Payment Confirmed";
-    } else if (transaction.status === STATUS.PAY) {
-      return "Paid";
+    } else if (transaction.status === STATUS.CHECK_PAYMENT) {
+      return "Checking Payment";
+    } else if (transaction.status === STATUS.PAYMENT_ACCEPTED) {
+      return "Payment Accepted";
     } else if (transaction.status === STATUS.PENDING) {
       return "Pending";
     }
@@ -91,7 +91,7 @@ const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
             e.stopPropagation();
           }}
         >
-          {transactionItem.status === STATUS.PENDING ? (
+          {transactionItem.status === STATUS.PAYMENT_ACCEPTED ? (
             <Popover>
               <PopoverTrigger>
                 <EditIcon color="blue.500" />
@@ -127,7 +127,9 @@ const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
           ) : transactionItem.status === STATUS.FAIL ? (
             <CloseIcon color="red.500" />
           ) : (
-            <CheckIcon color="green.500" />
+            transactionItem.status >= STATUS.ACCEPT && (
+              <CheckIcon color="green.500" />
+            )
           )}
         </Td>
       </Tr>

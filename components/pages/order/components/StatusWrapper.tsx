@@ -3,9 +3,9 @@ import { ReactNode } from "react";
 
 export const STATUS = {
   PENDING: 1,
-  ACCEPT: 2,
-  PAY: 3,
-  PAID: 4,
+  CHECK_PAYMENT: 2,
+  PAYMENT_ACCEPTED: 3,
+  ACCEPT: 4,
   DONE: 5,
   FAIL: 6,
 };
@@ -27,8 +27,10 @@ const StatusWrapper = ({
           ? "teal"
           : status === STATUS.ACCEPT
           ? "green"
-          : status === STATUS.PAID
+          : status === STATUS.PAYMENT_ACCEPTED
           ? "twitter.500"
+          : status === STATUS.CHECK_PAYMENT
+          ? "yellow.500"
           : status === STATUS.DONE
           ? "green"
           : "red"
@@ -38,8 +40,10 @@ const StatusWrapper = ({
           ? "teal"
           : status === STATUS.ACCEPT
           ? "green"
-          : status === STATUS.PAID
+          : status === STATUS.PAYMENT_ACCEPTED
           ? "twitter.500"
+          : status === STATUS.CHECK_PAYMENT
+          ? "yellow.500"
           : status === STATUS.DONE
           ? "green"
           : "red"
@@ -49,8 +53,10 @@ const StatusWrapper = ({
           ? "teal.200"
           : status === STATUS.ACCEPT
           ? "green.200"
-          : status === STATUS.PAID
+          : status === STATUS.PAYMENT_ACCEPTED
           ? "twitter.200"
+          : status === STATUS.CHECK_PAYMENT
+          ? "yellow.200"
           : status === STATUS.DONE
           ? "green.200"
           : "red.200"

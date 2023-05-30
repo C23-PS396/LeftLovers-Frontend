@@ -35,11 +35,11 @@ const Order = () => {
           }}
         >
           <option value={0}>All Order</option>
+          <option value={STATUS.PENDING}>Pending</option>
+          <option value={STATUS.CHECK_PAYMENT}>Checking Payment</option>
+          <option value={STATUS.PAYMENT_ACCEPTED}>Payment Accepted</option>
           <option value={STATUS.ACCEPT}>Accept</option>
           <option value={STATUS.DONE}>Done</option>
-          <option value={STATUS.PAY}>Paid</option>
-          <option value={STATUS.PAID}>Payment Confirmed</option>
-          <option value={STATUS.PENDING}>Pending</option>
           <option value={STATUS.FAIL}>Fail</option>
         </Select>
       </FormControl>
@@ -75,7 +75,7 @@ const Order = () => {
             ?.length === 0 &&
             filter !== 0 && (
               <Tr className="flex items-center justify-start w-full h-[61px] text-[0.9rem] font-bold mx-auto">
-                <Td>Empth Row</Td>
+                <Td>Empty Data</Td>
               </Tr>
             )}
         </Table>
