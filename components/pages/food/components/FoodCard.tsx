@@ -83,6 +83,15 @@ const FoodCard = ({ food }: { food: Food }) => {
     setIsEdit(false);
   };
 
+  const isAvail = (food: Food) => {
+    return (
+      food.activeFood &&
+      food.activeFood.isActive &&
+      food.activeFood.stock &&
+      new Date(food.activeFood.endTime) > new Date()
+    );
+  };
+
   return (
     <Card className={`basis-[250px] grow`}>
       <CardBody>
@@ -107,18 +116,22 @@ const FoodCard = ({ food }: { food: Food }) => {
                 <CheckIcon color="green.500" onClick={onSubmit} />
               </div>
             ) : (
-              <EditIcon
-                onClick={() => {
-                  setIsEdit(true);
-                }}
-                color="blue.500"
-              />
+              !isAvail(food) && (
+                <EditIcon
+                  onClick={() => {
+                    setIsEdit(true);
+                  }}
+                  color="blue.500"
+                />
+              )
             )}
           </div>
           {isEdit ? (
             <div className="flex flex-col gap-2">
               <FormControl>
-                <FormLabel fontWeight="bold">Stock</FormLabel>
+                <FormLabel fontWeight="bold" fontSize="0.9rem">
+                  Stock
+                </FormLabel>
                 <NumberInput>
                   <NumberInputField
                     onChange={(e) => setStock(Number(e.currentTarget.value))}
@@ -131,7 +144,9 @@ const FoodCard = ({ food }: { food: Food }) => {
                 </NumberInput>
               </FormControl>
               <FormControl>
-                <FormLabel fontWeight="bold">Duration (inHour)</FormLabel>
+                <FormLabel fontWeight="bold" fontSize="0.9rem">
+                  Duration (inHour)
+                </FormLabel>
                 <NumberInput>
                   <NumberInputField
                     onChange={(e) =>
@@ -146,7 +161,9 @@ const FoodCard = ({ food }: { food: Food }) => {
                 </NumberInput>
               </FormControl>
               <FormControl>
-                <FormLabel fontWeight="bold">Discount Price</FormLabel>
+                <FormLabel fontWeight="bold" fontSize="0.9rem">
+                  Discount Price
+                </FormLabel>
                 <InputGroup>
                   <InputLeftAddon>Rp</InputLeftAddon>
                   <NumberInput value={Number(discountPrice)}>
@@ -168,21 +185,9 @@ const FoodCard = ({ food }: { food: Food }) => {
               <div>
                 <StatusWrapper
                   className="text-[0.7rem] !px-2"
-                  status={
-                    food.activeFood &&
-                    food.activeFood.isActive &&
-                    food.activeFood.stock &&
-                    new Date(food.activeFood.endTime) > new Date()
-                      ? STATUS.ACCEPT
-                      : STATUS.FAIL
-                  }
+                  status={isAvail(food) ? STATUS.ACCEPT : STATUS.FAIL}
                 >
-                  {food.activeFood &&
-                  food.activeFood.isActive &&
-                  food.activeFood.stock &&
-                  new Date(food.activeFood.endTime) > new Date()
-                    ? "Available"
-                    : "Not Available"}
+                  {isAvail(food) ? "Available" : "Not Available"}
                 </StatusWrapper>
               </div>
               <div className="flex flex-col gap-2">
