@@ -4,9 +4,10 @@ import { ReactNode } from "react";
 export const STATUS = {
   PENDING: 1,
   ACCEPT: 2,
-  PAID: 3,
-  DONE: 4,
-  FAIL: 5,
+  PAY: 3,
+  PAID: 4,
+  DONE: 5,
+  FAIL: 6,
 };
 
 const StatusWrapper = ({

@@ -34,7 +34,7 @@ const FoodCard = ({ food }: { food: Food }) => {
   const [durationInHour, setDurationInHour] = useState(0);
   const [discountPrice, setDiscountPrice] = useState(food.price);
   const toast = useCustomToast();
-  const { merchant, foods, setFoods } =
+  const { merchant, getFood } =
     useMerchantDataContext() as MerchantDataContextState;
 
   const onSubmit = async () => {
@@ -54,24 +54,12 @@ const FoodCard = ({ food }: { food: Food }) => {
     });
 
     if (response.status === 201) {
+      getFood();
       toast({
         type: "success",
         title: "Success",
         message: "Food successfully Activated!",
       });
-      if (foods) {
-        const idx = foods?.findIndex((el) => el.id === food.id) as number;
-        const newFoods = foods.slice();
-        const changedFood = foods[idx];
-        changedFood.activeFood = {
-          ...changedFood.activeFood,
-          stock: stock,
-          isActive: true,
-          endTime: new Date(new Date().getTime() + durationInHour * 60 * 60),
-        };
-
-        setFoods(newFoods);
-      }
     } else {
       toast({
         type: "error",
@@ -79,7 +67,6 @@ const FoodCard = ({ food }: { food: Food }) => {
         message: "Internal Server Error",
       });
     }
-
     setIsEdit(false);
   };
 

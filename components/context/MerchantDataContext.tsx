@@ -52,12 +52,39 @@ export interface Category {
   name: string;
 }
 
+export interface FoodTransaction {
+  id: string;
+  quantity: number;
+  foodName: number;
+  foodPrice: number;
+}
+
+export interface CustomerTransaction {
+  id: string;
+  fullname: string;
+  username: string;
+  email: string;
+}
+
+export interface Transaction {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  totalprice: number;
+  status: number;
+  food: FoodTransaction[];
+  customer: CustomerTransaction;
+}
+
 export interface MerchantDataContextState {
   merchant: Merchant | null;
   foods: Food[] | null;
+  transaction: Transaction[] | null;
+  setTransaction: Dispatch<SetStateAction<Transaction[] | null>>;
   setMerchant: Dispatch<SetStateAction<Merchant | null>>;
   setFoods: Dispatch<SetStateAction<Food[] | null>>;
   getFood: () => void;
+  getTransaction: () => void;
 }
 
 export const MerchantDataContext =
@@ -70,6 +97,7 @@ export const MerchantDataContextProvider = ({
 }: React.PropsWithChildren<{}>) => {
   const [merchant, setMerchant] = useState<Merchant | null>(null);
   const [foods, setFoods] = useState<Food[] | null>([]);
+  const [transaction, setTransaction] = useState<Transaction[] | null>([]);
   const { user } = useAuthContext() as AuthContextState;
 
   const getMerchant = async () => {
@@ -101,9 +129,19 @@ export const MerchantDataContextProvider = ({
     setFoods(data);
   };
 
+  const getTransaction = async () => {
+    const response = await axios.get("/api/transaction", {
+      params: { merchantId: merchant?.id },
+    });
+
+    const { data } = response.data;
+    setTransaction(data);
+  };
+
   useEffect(() => {
     if (merchant) {
       getFood();
+      getTransaction();
     }
   }, [merchant]);
 
@@ -112,7 +150,10 @@ export const MerchantDataContextProvider = ({
     setMerchant,
     foods,
     setFoods,
+    transaction,
+    setTransaction,
     getFood,
+    getTransaction,
   };
 
   return (
