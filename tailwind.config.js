@@ -14,14 +14,18 @@ module.exports = {
       },
       keyframes: {
         wiggle: {
-          "0%": { filter: "blur(4px)", opacity: "0" },
-          "20%": { filter: "blur(0)", opacity: "1" },
-          "80%": { filter: "blur(0)", opacity: "1" },
-          "100%": { filter: "blur(4px)", opacity: "0" },
+          "0%, 27%, 100%": {
+            filter: "blur(0px)",
+            opacity: "1",
+          },
+          "50%, 90%": {
+            filter: "blur(90px)",
+            opacity: "0",
+          },
         },
       },
       animation: {
-        wiggle: "wiggle 2.5s linear infinite",
+        wiggle: "wiggle 6s linear infinite",
       },
     },
   },

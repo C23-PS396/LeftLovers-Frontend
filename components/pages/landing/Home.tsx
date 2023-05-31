@@ -20,7 +20,27 @@ const Home = () => {
       <div className="absolute left-0 -translate-y-1/2 lg:top-1/2 top-[30%] !z-[2]">
         <div className="lg:px-12 flex flex-col gap-4 z-100 px-6 - w-full">
           <Heading size="2xl" className="z-100 flex gap-2">
-            Saving <div className="animate-wiggle">{textList[count]}</div>
+            Saving{" "}
+            <div className="relative">
+              <div
+                className="animate-wiggle absolute top-1/2 left-1/2 -translate-y-1/2"
+                style={{ animationDelay: "-6s" }}
+              >
+                Food.
+              </div>
+              <div
+                className="animate-wiggle absolute top-1/2 left-1/2 -translate-y-1/2"
+                style={{ animationDelay: "-4s" }}
+              >
+                Money.
+              </div>
+              <div
+                className="animate-wiggle absolute top-1/2 left-1/2 -translate-y-1/2 w-max"
+                style={{ animationDelay: "-2s" }}
+              >
+                The Planet.
+              </div>
+            </div>
           </Heading>
           <Text className="text-[1rem] sm:text-[1.3rem] md:text-[1.4rem] lg:text-[1.5rem] lg:max-w-[55%] max-w-[90%]">
             Embrace sustainability. Unlock savings. Fight food waste. Together,
