@@ -58,10 +58,14 @@ const MerchantNavbar = () => {
     });
   };
 
+  const logoClickHandler = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <>
       <NavbarWrapper>
-        <Link href="#home">
+        <Link href="/dashboard">
           <LogoWrapper>
             <Heading className="!!lg:text-[2.3rem] text-[2rem] ">Left</Heading>
             <Text fontSize="2xl">Lovers</Text>
