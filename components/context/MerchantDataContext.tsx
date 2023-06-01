@@ -76,13 +76,26 @@ export interface Transaction {
   customer: CustomerTransaction;
 }
 
+export interface Review {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  rating: number;
+  review: string;
+  customer: CustomerTransaction;
+  merchant: Merchant;
+  transactionId: string;
+}
+
 export interface MerchantDataContextState {
   merchant: Merchant | null;
   foods: Food[] | null;
   transaction: Transaction[] | null;
+  review: Review[] | null;
   setTransaction: Dispatch<SetStateAction<Transaction[] | null>>;
   setMerchant: Dispatch<SetStateAction<Merchant | null>>;
   setFoods: Dispatch<SetStateAction<Food[] | null>>;
+  setReview: Dispatch<SetStateAction<Review[] | null>>;
   getFood: () => void;
   getTransaction: () => void;
 }
@@ -98,6 +111,7 @@ export const MerchantDataContextProvider = ({
   const [merchant, setMerchant] = useState<Merchant | null>(null);
   const [foods, setFoods] = useState<Food[] | null>([]);
   const [transaction, setTransaction] = useState<Transaction[] | null>([]);
+  const [review, setReview] = useState<Review[] | null>([]);
   const { user } = useAuthContext() as AuthContextState;
 
   const getMerchant = async () => {
@@ -109,7 +123,7 @@ export const MerchantDataContextProvider = ({
       const response = await axios.get("/api/merchant", { params });
       if (response.status === 200) {
         const { data } = response.data;
-        setMerchant(data[0]);
+        setMerchant(data);
       }
     } catch (e) {}
   };
@@ -138,16 +152,27 @@ export const MerchantDataContextProvider = ({
     setTransaction(data);
   };
 
+  const getReview = async () => {
+    const response = await axios.get("/api/review", {
+      params: { merchantId: merchant?.id },
+    });
+    const { data } = response.data;
+    setReview(data);
+  };
+
   useEffect(() => {
     if (merchant) {
       getFood();
       getTransaction();
+      getReview();
     }
   }, [merchant]);
 
   const merchantDataContextValue: MerchantDataContextState = {
     merchant,
     setMerchant,
+    review,
+    setReview,
     foods,
     setFoods,
     transaction,
