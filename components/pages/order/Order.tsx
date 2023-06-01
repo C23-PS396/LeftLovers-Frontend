@@ -10,18 +10,23 @@ import {
   Th,
   Tbody,
   Td,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { STATUS } from "./components/StatusWrapper";
 import {
   MerchantDataContextState,
+  Transaction,
   useMerchantDataContext,
 } from "@/components/context/MerchantDataContext";
 import { useState } from "react";
 import OrderList from "./components/OrderList";
+import OrderModal from "./components/OrderModal";
 
 const Order = () => {
   const { transaction } = useMerchantDataContext() as MerchantDataContextState;
   const [filter, setFilter] = useState<number>(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [transItem, setTransItem] = useState<Transaction | null>(null);
 
   return (
     <Container className="flex flex-col gap-4">
@@ -64,8 +69,10 @@ const Order = () => {
               if (filter === 0 || transactionItem.status === filter) {
                 return (
                   <OrderList
+                    onClick={onOpen}
                     key={transactionItem.id}
                     transactionItem={transactionItem}
+                    setTransItem={setTransItem}
                   />
                 );
               }
@@ -80,6 +87,11 @@ const Order = () => {
             )}
         </Table>
       </TableContainer>
+      <OrderModal
+        isOpen={isOpen}
+        onClose={onClose}
+        transaction={transItem as Transaction}
+      />
     </Container>
   );
 };

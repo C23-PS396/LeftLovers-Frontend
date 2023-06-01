@@ -37,32 +37,31 @@ const OrderModal = ({
           <div className="flex flex-col gap-4">
             <div>
               <Text className="font-bold">Order ID</Text>
-              <Text>{transaction.id.split("-")[0].toUpperCase()}</Text>
+              <Text>{transaction?.id.split("-")[0].toUpperCase()}</Text>
             </div>
             <div>
               <Text className="font-bold">Customer</Text>
               <Text>
-                {transaction.customer.fullname || transaction.customer.username}
+                {transaction?.customer.fullname ||
+                  transaction?.customer.username}
               </Text>
             </div>
             <div>
               <Text className="font-bold">Date Time</Text>
-              <Text>{getDateTime(transaction.createdAt)}</Text>
+              <Text>{getDateTime(transaction?.createdAt)}</Text>
             </div>
             <div>
               <Text className="font-bold">Order Detail</Text>
               <TableContainer>
                 <Table variant="unstyled">
                   <Tbody>
-                    {transaction.food.map((food, idx) => {
+                    {transaction?.food?.map((food, idx) => {
                       return (
                         <Tr className="!py-0" key={food.id}>
                           <Td p={0} className="truncate">
                             {idx + 1}. {food.foodName}
                           </Td>
-                          <Td p={0}>
-                            {food.quantity} <span>x</span>
-                          </Td>
+                          <Td p={0}>{food.quantity} x</Td>
                           <Td p={0}>{formatter.format(food.foodPrice)}</Td>
                         </Tr>
                       );
@@ -73,7 +72,7 @@ const OrderModal = ({
             </div>
             <div>
               <Text className="font-bold">Total Price</Text>
-              <Text>{formatter.format(transaction.totalprice)}</Text>
+              <Text>{formatter.format(transaction?.totalprice)}</Text>
             </div>
           </div>
         </ModalBody>

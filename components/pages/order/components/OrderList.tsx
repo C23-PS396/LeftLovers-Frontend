@@ -14,7 +14,6 @@ import {
   PopoverBody,
   Td,
   Button,
-  useDisclosure,
 } from "@chakra-ui/react";
 import StatusWrapper, { STATUS } from "./StatusWrapper";
 import getDateTime from "@/components/utils/getDateTime";
@@ -23,9 +22,17 @@ import formatter from "@/components/utils/rupiahFormatter";
 import OrderModal from "./OrderModal";
 import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
+import { Dispatch, SetStateAction } from "react";
 
-const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const OrderList = ({
+  transactionItem,
+  onClick,
+  setTransItem,
+}: {
+  transactionItem: Transaction;
+  onClick: () => void;
+  setTransItem: Dispatch<SetStateAction<Transaction | null>>;
+}) => {
   const toast = useCustomToast();
   const { getTransaction } =
     useMerchantDataContext() as MerchantDataContextState;
@@ -71,7 +78,14 @@ const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
 
   return (
     <>
-      <Tr key={transactionItem.id} onClick={onOpen} className="cursor-pointer">
+      <Tr
+        key={transactionItem.id}
+        onClick={() => {
+          setTransItem(transactionItem);
+          onClick();
+        }}
+        className="cursor-pointer"
+      >
         <Td>{transactionItem.id.toUpperCase().split("-")[0]}</Td>
         <Td>{getDateTime(transactionItem.createdAt)}</Td>
         <Td>
@@ -133,11 +147,6 @@ const OrderList = ({ transactionItem }: { transactionItem: Transaction }) => {
           )}
         </Td>
       </Tr>
-      <OrderModal
-        isOpen={isOpen}
-        onClose={onClose}
-        transaction={transactionItem}
-      />
     </>
   );
 };
