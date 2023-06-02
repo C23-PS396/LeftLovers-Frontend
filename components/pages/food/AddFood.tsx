@@ -97,7 +97,10 @@ const AddFood = () => {
       let formData = new FormData();
       formData.append("imgFile", selectedFiles);
 
-      const res = await axios.post(`${process.env.API_URL}/upload`, formData);
+      const res = await axios.post(
+        `https://leftlovers-backend-nqh3dgyegq-et.a.run.app/api/v1/upload`,
+        formData
+      );
 
       if (res.status === 200) {
         return `${process.env.BUCKET_URL}/${selectedFiles.name}`;

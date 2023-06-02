@@ -85,7 +85,7 @@ const FoodCard = ({ food }: { food: Food }) => {
         <Image
           src={
             food.pictureUrl ||
-            `${process.env.BUCKET_URL}/not-found-image.jpeg`
+            `https://storage.googleapis.com/bucket-ps396/not-found-image.jpeg`
           }
           alt="Green double couch with wooden legs"
           borderRadius="lg"
