@@ -103,7 +103,7 @@ const AddFood = () => {
       );
 
       if (res.status === 200) {
-        return `${process.env.BUCKET_URL}/${selectedFiles.name}`;
+        return `https://storage.googleapis.com/bucket-ps396/${selectedFiles.name}`;
       }
     }
 
