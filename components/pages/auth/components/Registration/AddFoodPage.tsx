@@ -27,7 +27,6 @@ import AuthForm from "../AuthForm";
 import {
   ChangeEvent,
   Dispatch,
-  MouseEvent,
   SetStateAction,
   useEffect,
   useRef,
@@ -457,6 +456,7 @@ export const Dropzone = ({
       <input
         type="file"
         id="input"
+        accept="image/png"
         className="hidden"
         ref={inputRef}
         onChange={handleFileChange}

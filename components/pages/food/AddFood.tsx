@@ -34,6 +34,7 @@ import {
 } from "@/components/context/MerchantDataContext";
 import { useRouter } from "next/router";
 import Container from "@/components/common/Container";
+import { v4 as uuidv4 } from "uuid";
 
 const AddFood = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,6 +45,7 @@ const AddFood = () => {
     name: "",
     price: 0,
     category: [],
+    pictureUrl: undefined,
   });
   const [foodInput, setFoodInput] = useState<FoodInput[]>([]);
   const [categoryOption, setCategoryOption] = useState<Category[]>();
@@ -58,8 +60,10 @@ const AddFood = () => {
     const files = event.target.files;
     if (files) {
       const file = files[0];
+      const blob = file.slice(0, file.size, "image/png");
+      const newFile = new File([blob], `${uuidv4()}`, { type: "image/png" });
       if (file) {
-        setSelectedFiles(file);
+        setSelectedFiles(newFile);
         return;
       }
     }
@@ -88,6 +92,43 @@ const AddFood = () => {
     }
   }, [categoryOption, searchedString]);
 
+  const uploadFile = async () => {
+    if (selectedFiles) {
+      let formData = new FormData();
+      formData.append("imgFile", selectedFiles);
+
+      const res = await axios.post(`${process.env.API_URL}/upload`, formData);
+
+      if (res.status === 200) {
+        return `${process.env.BUCKET_URL}/${selectedFiles.name}`;
+      }
+    }
+
+    return null;
+  };
+
+  const saveFile = async () => {
+    if (
+      food?.name &&
+      food?.price &&
+      foodInput.findIndex((el) => el.name === food.name) < 0
+    ) {
+      const fileUrl = await uploadFile();
+      const newFoodInput = foodInput.slice();
+      newFoodInput.push({ ...food, pictureUrl: fileUrl as string });
+      setFoodInput(newFoodInput);
+      setSelectedFiles(null);
+      setFood({
+        name: "",
+        price: 0,
+        category: [],
+        pictureUrl: undefined,
+      });
+      onClose();
+      return;
+    }
+  };
+
   const submitFood = async () => {
     try {
       await axios.post("/api/food", {
@@ -95,7 +136,7 @@ const AddFood = () => {
         foods: foodInput,
       });
 
-      await getFood();
+      getFood();
 
       toast({
         type: "success",
@@ -128,7 +169,7 @@ const AddFood = () => {
                   <Image
                     objectFit="cover"
                     maxW={{ base: "100%", sm: "200px" }}
-                    src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                    src={food.pictureUrl}
                     alt="Caffe Latte"
                   />
                   <Stack>
@@ -400,19 +441,7 @@ const AddFood = () => {
               colorScheme="blue"
               mr={3}
               isDisabled={!food.name || !food.price}
-              onClick={() => {
-                if (
-                  food?.name &&
-                  food?.price &&
-                  foodInput.findIndex((el) => el.name === food.name) < 0
-                ) {
-                  const newFoodInput = foodInput.slice();
-                  newFoodInput.push(food);
-                  setFoodInput(newFoodInput);
-                  setFood({ name: "", price: 0, category: [] });
-                  onClose();
-                }
-              }}
+              onClick={saveFile}
             >
               Save
             </Button>

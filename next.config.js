@@ -4,6 +4,7 @@ const nextConfig = {
   env: {
     API_URL: process.env.API_URL,
     SECRET: process.env.SECRET,
+    BUCKET_URL: process.env.BUCKET_URL,
   },
 };
 
