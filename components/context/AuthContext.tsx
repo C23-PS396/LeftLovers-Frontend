@@ -61,6 +61,7 @@ export const AuthContextProvider = ({
 
   const login = (token: string) => {
     const decodedToken = jwt<User>(token);
+    localStorage.setItem("authToken", token);
     setUser(decodedToken);
     setAuthStatus(AuthStatus.AUTHENTICATED);
     router.push("/dashboard");
@@ -68,6 +69,7 @@ export const AuthContextProvider = ({
 
   const logout = async () => {
     await axios.post("/api/auth/logout");
+    localStorage.removeItem("authToken");
     setUser(null);
     setAuthStatus(AuthStatus.NOT_AUTHENTICATED);
   };
@@ -89,6 +91,7 @@ export const AuthContextProvider = ({
           const user = jwt<User>(tokenStatus);
           setUser(user);
         }
+        localStorage.setItem("authToken", tokenStatus);
         setAuthStatus(AuthStatus.AUTHENTICATED);
         return AuthStatus.AUTHENTICATED;
       }

@@ -35,6 +35,7 @@ import {
 import { useRouter } from "next/router";
 import Container from "@/components/common/Container";
 import { v4 as uuidv4 } from "uuid";
+import uploadHandler from "@/components/utils/uploadHandler";
 
 const AddFood = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -93,21 +94,9 @@ const AddFood = () => {
   }, [categoryOption, searchedString]);
 
   const uploadFile = async () => {
-    if (selectedFiles) {
-      let formData = new FormData();
-      formData.append("imgFile", selectedFiles);
+    const url = uploadHandler(selectedFiles);
 
-      const res = await axios.post(
-        `https://leftlovers-backend-nqh3dgyegq-et.a.run.app/api/v1/upload`,
-        formData
-      );
-
-      if (res.status === 200) {
-        return `https://storage.googleapis.com/bucket-ps396/${selectedFiles.name}`;
-      }
-    }
-
-    return null;
+    return url;
   };
 
   const saveFile = async () => {

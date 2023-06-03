@@ -35,6 +35,7 @@ import {
 import { Category, FoodInput } from "@/components/type/Registration/FoodInput";
 import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
+import uploadHandler from "@/components/utils/uploadHandler";
 
 const AddFoodPage = ({
   foodInput,
@@ -79,6 +80,26 @@ const AddFoodPage = ({
     setCategoryOption(data);
   };
 
+  const uploadFile = () => {
+    const url = uploadHandler(selectedFiles);
+    return url;
+  };
+
+  const saveHandler = async () => {
+    if (
+      food?.name &&
+      food?.price &&
+      foodInput.findIndex((el) => el.name === food.name) < 0
+    ) {
+      const url = await uploadFile();
+      const newFoodInput = foodInput.slice();
+      newFoodInput.push({ ...food, pictureUrl: url as string });
+      setFoodInput(newFoodInput);
+      setFood({ name: "", price: 0, category: [] });
+      onClose();
+    }
+  };
+
   useEffect(() => {
     getCategory();
   }, []);
@@ -112,7 +133,10 @@ const AddFoodPage = ({
                     <Image
                       objectFit="cover"
                       maxW={{ base: "100%", sm: "200px" }}
-                      src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                      src={
+                        food.pictureUrl ||
+                        "https://storage.googleapis.com/bucket-ps396/not-found-image.jpeg"
+                      }
                       alt="Caffe Latte"
                     />
                     <Stack>
@@ -384,19 +408,7 @@ const AddFoodPage = ({
               colorScheme="blue"
               mr={3}
               isDisabled={!food.name || !food.price}
-              onClick={() => {
-                if (
-                  food?.name &&
-                  food?.price &&
-                  foodInput.findIndex((el) => el.name === food.name) < 0
-                ) {
-                  const newFoodInput = foodInput.slice();
-                  newFoodInput.push(food);
-                  setFoodInput(newFoodInput);
-                  setFood({ name: "", price: 0, category: [] });
-                  onClose();
-                }
-              }}
+              onClick={saveHandler}
             >
               Save
             </Buttons>
