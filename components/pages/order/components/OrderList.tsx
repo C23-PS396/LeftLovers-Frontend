@@ -54,7 +54,7 @@ const OrderList = ({
   };
 
   const updateStatus = async (status: number, transactionId: string) => {
-    const response = await axios.post("/api/transaction/status", {
+    const response = await axios.patch("/api/transaction/status", {
       status: status,
       transactionId: transactionId,
     });

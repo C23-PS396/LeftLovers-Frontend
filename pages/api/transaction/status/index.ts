@@ -5,14 +5,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
+  if (req.method === "PATCH") {
     const { status, transactionId } = req.body;
     const { cookies } = req;
     const token = cookies.authToken;
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
     try {
-      const result = await axios.post(
+      const result = await axios.patch(
         `${process.env.API_URL}/transaction/update`,
         {
           status: status,
