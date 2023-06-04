@@ -1,11 +1,10 @@
 import {
-  ActiveFood,
   Food,
   MerchantDataContextState,
   useMerchantDataContext,
 } from "@/components/context/MerchantDataContext";
 import formatter from "@/components/utils/rupiahFormatter";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Card,
   CardBody,
@@ -20,13 +19,16 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import StatusWrapper, { STATUS } from "../../order/components/StatusWrapper";
 import { useState } from "react";
 import useCustomToast from "@/components/utils/useCustomToast";
 import axios from "axios";
+import ActivateFoodIcon from "./ActivateFoodIcon";
 
 const FoodCard = ({ food }: { food: Food }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -36,8 +38,10 @@ const FoodCard = ({ food }: { food: Food }) => {
   const toast = useCustomToast();
   const { merchant, getFood } =
     useMerchantDataContext() as MerchantDataContextState;
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async () => {
+    setIsLoading(true);
     if (!stock || !durationInHour || !discountPrice) {
       toast({
         type: "error",
@@ -68,6 +72,31 @@ const FoodCard = ({ food }: { food: Food }) => {
       });
     }
     setIsEdit(false);
+    setIsLoading(false);
+  };
+
+  const deleteFoodHandler = async (id: string) => {
+    try {
+      const res = await axios.delete("/api/food", {
+        params: { merchantId: id },
+      });
+
+      const { message } = res.data.data;
+
+      toast({
+        type: "success",
+        title: "Success",
+        message: message,
+      });
+
+      getFood();
+    } catch (err) {
+      toast({
+        type: "warning",
+        title: "Failed",
+        message: "Failed when deleting food",
+      });
+    }
   };
 
   const isAvail = (food: Food) => {
@@ -92,29 +121,65 @@ const FoodCard = ({ food }: { food: Food }) => {
           className="object-cover mx-auto aspect-[4/3]"
         />
         <Stack mt="6" spacing="3">
-          <div className="flex justify-between items-center cursor-pointer">
+          <div className="flex justify-between items-center">
             <Heading size="md" className="max-w-[75%] truncate">
               {food.name}
             </Heading>
             {isEdit ? (
               <div className="flex gap-4">
-                <CloseIcon
-                  color="red.500"
-                  onClick={() => {
-                    setIsEdit(false);
-                  }}
-                />
-                <CheckIcon color="green.500" onClick={onSubmit} />
+                <Tooltip label="Cancel" placement="auto-start" hasArrow>
+                  <CloseIcon
+                    color="red.500"
+                    onClick={() => {
+                      setIsEdit(false);
+                    }}
+                    className="cursor-pointer"
+                  />
+                </Tooltip>
+                {isLoading ? (
+                  <Spinner size="sm"></Spinner>
+                ) : (
+                  <Tooltip label="Save" placement="auto-start" hasArrow>
+                    <CheckIcon
+                      color="green.500"
+                      className="cursor-pointer"
+                      onClick={onSubmit}
+                    />
+                  </Tooltip>
+                )}
               </div>
             ) : (
-              !isAvail(food) && (
-                <EditIcon
-                  onClick={() => {
-                    setIsEdit(true);
-                  }}
-                  color="blue.500"
-                />
-              )
+              <div className="flex gap-4 items-center">
+                {!isAvail(food) && (
+                  <Tooltip
+                    label="Make your food available"
+                    placement="auto-start"
+                    hasArrow
+                  >
+                    <div
+                      onClick={() => {
+                        setIsEdit(true);
+                      }}
+                      className="flex max-w-[16px] cursor-pointer"
+                    >
+                      <ActivateFoodIcon />
+                    </div>
+                  </Tooltip>
+                )}
+                <Tooltip
+                  label="Delete your food"
+                  placement="auto-start"
+                  hasArrow
+                >
+                  <DeleteIcon
+                    onClick={() => {
+                      deleteFoodHandler(food.id);
+                    }}
+                    color="red.500"
+                    className="cursor-pointer"
+                  />
+                </Tooltip>
+              </div>
             )}
           </div>
           {isEdit ? (
