@@ -1,6 +1,8 @@
 import { Transaction } from "@/components/context/MerchantDataContext";
 import getDateTime from "@/components/utils/getDateTime";
 import formatter from "@/components/utils/rupiahFormatter";
+import useCustomToast from "@/components/utils/useCustomToast";
+import { CopyIcon } from "@chakra-ui/icons";
 import {
   Button,
   Divider,
@@ -16,6 +18,7 @@ import {
   Td,
   Text,
   Tr,
+  useClipboard,
 } from "@chakra-ui/react";
 
 const OrderModal = ({
@@ -27,6 +30,9 @@ const OrderModal = ({
   onClose: () => void;
   transaction: Transaction;
 }) => {
+  const { onCopy } = useClipboard(transaction?.id);
+  const toast = useCustomToast();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -36,7 +42,20 @@ const OrderModal = ({
         <ModalBody>
           <div className="flex flex-col gap-4">
             <div>
-              <Text className="font-bold">Order ID</Text>
+              <div className="flex gap-2 items-center">
+                <Text className="font-bold">Order ID</Text>
+                <CopyIcon
+                  className="cursor-pointer"
+                  onClick={() => {
+                    onCopy();
+                    toast({
+                      type: "info",
+                      title: "Copy success",
+                      message: "Transaction id has been successfully copied",
+                    });
+                  }}
+                />
+              </div>
               <Text>{transaction?.id.split("-")[0].toUpperCase()}</Text>
             </div>
             <div>
