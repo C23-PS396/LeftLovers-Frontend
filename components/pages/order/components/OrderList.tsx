@@ -138,12 +138,8 @@ const OrderList = ({
                 </PopoverBody>
               </PopoverContent>
             </Popover>
-          ) : transactionItem.status === STATUS.FAIL ? (
-            <CloseIcon color="red.500" />
           ) : (
-            transactionItem.status >= STATUS.ACCEPT && (
-              <CheckIcon color="green.500" />
-            )
+            <div>-</div>
           )}
         </Td>
       </Tr>
