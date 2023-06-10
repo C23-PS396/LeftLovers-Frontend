@@ -13,10 +13,9 @@ import Container from "@/components/common/Container";
 import useWindowSize from "@/components/hook/useWindowSize";
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
 import CartWrapper from "./components/Chart/ChartWrapper";
-import { Card, Heading, Image, Skeleton, Text } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import DoughnutChart from "./components/Chart/DoughnutChart";
 import BarChart from "./components/Chart/BarChart";
-import { StarIcon } from "@chakra-ui/icons";
 import Statistic from "./components/Chart/Statisitc";
 import TopFood from "./components/Chart/TopFood";
 
@@ -50,11 +49,11 @@ const Overview = () => {
     <Container className="bg-[#F1F5F9] flex flex-col gap-4">
       <Heading color="#414D55">Summary</Heading>
       <div className="flex gap-4 flex-col lg:flex-row">
-        <CartWrapper className="w-full lg:w-2/5 !flex-col !gap-6">
-          <Statistic />
-        </CartWrapper>
-        <CartWrapper className="w-full lg:w-3/5">
+        <CartWrapper className="w-full lg:w-1/2">
           <TopFood />
+        </CartWrapper>
+        <CartWrapper className="w-full lg:w-1/2 !flex-col !gap-6">
+          <Statistic />
         </CartWrapper>
       </div>
       <CartWrapper>

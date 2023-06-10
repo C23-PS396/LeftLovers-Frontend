@@ -1,17 +1,46 @@
+import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
 import { StarIcon } from "@chakra-ui/icons";
 import { Card, CardBody, Heading, Image, Stack, Text } from "@chakra-ui/react";
+import { startCase } from "lodash";
+import LocationIcon from "../LocationIcon";
 
 const TopFood = () => {
+  const { merchant } = useMerchantDataContext() as MerchantDataContextState;
+  const getLocation = () => {
+    const location = `${merchant?.location.fullLocation}, ${
+      merchant?.location.village
+    }, ${merchant?.location.district}, ${startCase(
+      merchant?.location.regency.toLocaleLowerCase()
+    )}, ${startCase(merchant?.location.province.toLocaleLowerCase())}`;
+
+    return location;
+  };
   return (
     <>
       <div className="flex flex-col">
-        <Text fontWeight="bold" mb="2" className="text-center lg:text-start">
-          Top Food
-        </Text>
-        <div className="flex gap-2">
-          <CardFood />
-          <CardFood />
-          <CardFood />
+        <div className="flex lg:flex-row flex-col gap-8 w-full">
+          <div className="flex !rounded-lg aspect-square mx-auto w-[200px]">
+            <Image
+              borderRadius="5px"
+              src={merchant?.profilePictureUrl}
+              alt="merchant-photo"
+              className="object-cover"
+            />
+          </div>
+          <div className="flex flex-col text-center lg:text-start">
+            <Text className="font-bold sm:text-[1.1rem] md:text-[1.2rem] lg:text-[1.3rem]">
+              {merchant?.name}
+            </Text>
+            <div className="font-semibold">
+              <Text>#{merchant?.id.split("-")[0].toUpperCase()}</Text>
+            </div>
+            <div className="flex mt-3">
+              <Text>{getLocation()}</Text>
+            </div>
+          </div>
         </div>
       </div>
     </>
