@@ -39,39 +39,41 @@ const Review = () => {
       )}
       <div className="pt-8 flex flex-wrap gap-4">
         {review?.map((el) => {
-          return (
-            <Card key={el.id} className="basis-[300px] grow">
-              <CardHeader>
-                <Flex>
-                  <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                    <Avatar
-                      name={el.customer.fullname || el.customer.username}
+          if (el.isFilled) {
+            return (
+              <Card key={el.id} className="basis-[300px] grow">
+                <CardHeader>
+                  <Flex>
+                    <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+                      <Avatar
+                        name={el.customer.fullname || el.customer.username}
+                      />
+                      <Box>
+                        <Heading size="sm">
+                          {el.customer.fullname || el.customer.username}
+                        </Heading>
+                        <Text>
+                          #{el.transactionId.split("-")[0].toUpperCase()}
+                        </Text>
+                      </Box>
+                    </Flex>
+                    <IconButton
+                      variant="ghost"
+                      colorScheme="gray"
+                      aria-label="See menu"
                     />
-                    <Box>
-                      <Heading size="sm">
-                        {el.customer.fullname || el.customer.username}
-                      </Heading>
-                      <Text>
-                        #{el.transactionId.split("-")[0].toUpperCase()}
-                      </Text>
-                    </Box>
                   </Flex>
-                  <IconButton
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="See menu"
-                  />
-                </Flex>
-              </CardHeader>
-              <CardBody className="flex flex-col gap-2">
-                <div className="flex items-center gap-1">
-                  <Text className="font-bold">{el.rating}</Text>
-                  <StarIcon />
-                </div>
-                <Text>{el.review}</Text>
-              </CardBody>
-            </Card>
-          );
+                </CardHeader>
+                <CardBody className="flex flex-col gap-2">
+                  <div className="flex items-center gap-1">
+                    <Text className="font-bold">{el.rating}</Text>
+                    <StarIcon />
+                  </div>
+                  <Text>{el.review}</Text>
+                </CardBody>
+              </Card>
+            );
+          }
         })}
       </div>
     </Container>

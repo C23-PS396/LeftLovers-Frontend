@@ -84,6 +84,7 @@ export interface Review {
   review: string;
   customer: CustomerTransaction;
   merchant: Merchant;
+  isFilled: boolean;
   transactionId: string;
 }
 
