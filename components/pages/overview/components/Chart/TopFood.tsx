@@ -36,7 +36,7 @@ const CardFood = () => {
             alignItems="center"
             gap="2"
           >
-            Rating 4.9 <StarIcon />
+            Rating 4.9 <StarIcon color="#FFCD3C" />
           </Text>
         </Stack>
       </CardBody>

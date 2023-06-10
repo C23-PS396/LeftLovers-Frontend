@@ -23,7 +23,7 @@ const Statistic = () => {
         </div>
         <div className="text-center lg:text-start">
           <Text color="#414D55" fontWeight="bolder">
-            Review
+            Rating
           </Text>
           <Text
             color="#414D55"
@@ -33,7 +33,7 @@ const Statistic = () => {
             alignItems="center"
             gap="2"
           >
-            4.5 <StarIcon />
+            4.5 <StarIcon color="#FFCD3C" />
           </Text>
         </div>
       </div>
