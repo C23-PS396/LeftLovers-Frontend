@@ -1,19 +1,8 @@
 import { Button, Heading, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 const Home = () => {
   const router = useRouter();
-  const textList = [<span key="food">Food.</span>, "Money.", "The Planet."];
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCount((prevCount) => (prevCount + 1) % 3);
-    }, 2500);
-
-    return () => clearInterval(interval);
-  });
 
   return (
     <div id="home" className="h-screen flex items-end">
