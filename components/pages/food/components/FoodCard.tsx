@@ -3,7 +3,6 @@ import {
   MerchantDataContextState,
   useMerchantDataContext,
 } from "@/components/context/MerchantDataContext";
-import formatter from "@/components/utils/rupiahFormatter";
 import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Card,
@@ -29,6 +28,7 @@ import { useState } from "react";
 import useCustomToast from "@/components/utils/useCustomToast";
 import axios from "axios";
 import ActivateFoodIcon from "./ActivateFoodIcon";
+import { rupiahFormatter } from "@/components/utils/formatter";
 
 const FoodCard = ({ food }: { food: Food }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -268,7 +268,7 @@ const FoodCard = ({ food }: { food: Food }) => {
               <div className="flex flex-col">
                 <Text className="text-[0.9rem] font-bold">Price</Text>
                 <Text color="blue.600" fontSize="2xl">
-                  {formatter.format(food.price)}
+                  {rupiahFormatter.format(food.price)}
                 </Text>
               </div>{" "}
             </>

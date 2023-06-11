@@ -53,7 +53,7 @@ const Review = () => {
                           {el.customer.fullname || el.customer.username}
                         </Heading>
                         <Text>
-                          #{el.transactionId.split("-")[0].toUpperCase()}
+                          {el.transactionId.split("-")[0].toUpperCase()}
                         </Text>
                       </Box>
                     </Flex>

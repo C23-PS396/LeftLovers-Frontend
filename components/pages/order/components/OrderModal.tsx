@@ -1,6 +1,6 @@
 import { Transaction } from "@/components/context/MerchantDataContext";
+import { rupiahFormatter } from "@/components/utils/formatter";
 import getDateTime from "@/components/utils/getDateTime";
-import formatter from "@/components/utils/rupiahFormatter";
 import useCustomToast from "@/components/utils/useCustomToast";
 import { CopyIcon } from "@chakra-ui/icons";
 import {
@@ -81,7 +81,7 @@ const OrderModal = ({
                             {idx + 1}. {food.foodName}
                           </Td>
                           <Td p={0}>{food.quantity} x</Td>
-                          <Td p={0}>{formatter.format(food.foodPrice)}</Td>
+                          <Td p={0}>{rupiahFormatter.format(food.foodPrice)}</Td>
                         </Tr>
                       );
                     })}
@@ -91,7 +91,7 @@ const OrderModal = ({
             </div>
             <div>
               <Text className="font-bold">Total Price</Text>
-              <Text>{formatter.format(transaction?.totalprice)}</Text>
+              <Text>{rupiahFormatter.format(transaction?.totalprice)}</Text>
             </div>
           </div>
         </ModalBody>

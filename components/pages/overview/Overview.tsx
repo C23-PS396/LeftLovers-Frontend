@@ -17,7 +17,7 @@ import { Heading, Text } from "@chakra-ui/react";
 import DoughnutChart from "./components/Chart/DoughnutChart";
 import BarChart from "./components/Chart/BarChart";
 import Statistic from "./components/Chart/Statisitc";
-import TopFood from "./components/Chart/TopFood";
+import MerchantInformation from "./components/Chart/MerchantInformation";
 
 ChartJS.register(
   CategoryScale,
@@ -50,7 +50,7 @@ const Overview = () => {
       <Heading color="#414D55">Summary</Heading>
       <div className="flex gap-4 flex-col lg:flex-row">
         <CartWrapper className="w-full lg:w-1/2">
-          <TopFood />
+          <MerchantInformation />
         </CartWrapper>
         <CartWrapper className="w-full lg:w-1/2 !flex-col !gap-6">
           <Statistic />

@@ -468,7 +468,7 @@ export const Dropzone = ({
       <input
         type="file"
         id="input"
-        accept="image/png"
+        accept="image/*"
         className="hidden"
         ref={inputRef}
         onChange={handleFileChange}

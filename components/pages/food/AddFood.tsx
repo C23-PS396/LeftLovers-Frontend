@@ -61,8 +61,8 @@ const AddFood = () => {
     const files = event.target.files;
     if (files) {
       const file = files[0];
-      const blob = file.slice(0, file.size, "image/png");
-      const newFile = new File([blob], `${uuidv4()}`, { type: "image/png" });
+      const blob = file.slice(0, file.size, file.type);
+      const newFile = new File([blob], `${uuidv4()}`, { type: file.type });
       if (file) {
         setSelectedFiles(newFile);
         return;

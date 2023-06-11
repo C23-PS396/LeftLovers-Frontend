@@ -17,6 +17,8 @@ export interface Merchant {
   location: Location;
   createdAt: Date;
   updatedAt: Date;
+  rating: { _avg: { rating: number } };
+  statistic: { _sum: { totalprice: number }; _count: { id: number } };
 }
 
 export interface Location {
@@ -167,6 +169,8 @@ export const MerchantDataContextProvider = ({
       getTransaction();
       getReview();
     }
+
+    console.log(merchant);
   }, [merchant]);
 
   const merchantDataContextValue: MerchantDataContextState = {

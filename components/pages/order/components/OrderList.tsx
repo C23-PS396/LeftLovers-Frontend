@@ -18,11 +18,11 @@ import {
 import StatusWrapper, { STATUS } from "./StatusWrapper";
 import getDateTime from "@/components/utils/getDateTime";
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
-import formatter from "@/components/utils/rupiahFormatter";
 import OrderModal from "./OrderModal";
 import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
 import { Dispatch, SetStateAction } from "react";
+import { rupiahFormatter } from "@/components/utils/formatter";
 
 const OrderList = ({
   transactionItem,
@@ -93,7 +93,7 @@ const OrderList = ({
             ? transactionItem.customer.fullname
             : transactionItem.customer.username}
         </Td>
-        <Td>{formatter.format(transactionItem.totalprice)}</Td>
+        <Td>{rupiahFormatter.format(transactionItem.totalprice)}</Td>
         <Td>
           <StatusWrapper status={transactionItem.status} className="mx-auto">
             {getStatus(transactionItem)}

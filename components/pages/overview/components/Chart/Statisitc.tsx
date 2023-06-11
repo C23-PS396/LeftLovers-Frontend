@@ -1,7 +1,17 @@
+import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
+import {
+  numberFormatter,
+  ratingFormatter,
+  rupiahFormatter,
+} from "@/components/utils/formatter";
 import { StarIcon } from "@chakra-ui/icons";
 import { Text } from "@chakra-ui/react";
 
 const Statistic = () => {
+  const { merchant } = useMerchantDataContext() as MerchantDataContextState;
   return (
     <>
       <div className="text-center lg:text-start">
@@ -9,7 +19,9 @@ const Statistic = () => {
           Total Revenue
         </Text>
         <Text fontSize="4xl" color="#414D55" fontWeight="bold">
-          Rp50.000
+          {rupiahFormatter.format(
+            (merchant?.statistic?._sum.totalprice as number) || 0
+          )}
         </Text>
       </div>
       <div className="flex justify-center gap-6 lg:gap-0 lg:justify-between">
@@ -18,7 +30,9 @@ const Statistic = () => {
             Total Order
           </Text>
           <Text fontSize="2xl" color="#414D55" fontWeight="bold">
-            100.000
+            {numberFormatter
+              .format(merchant?.statistic?._count.id || 0)
+              .replaceAll(",", ".")}
           </Text>
         </div>
         <div className="text-center lg:text-start">
@@ -33,7 +47,8 @@ const Statistic = () => {
             alignItems="center"
             gap="2"
           >
-            4.5 <StarIcon color="#FFCD3C" />
+            {ratingFormatter.format(merchant?.rating._avg.rating || 0)}{" "}
+            <StarIcon color="#FFCD3C" />
           </Text>
         </div>
       </div>
