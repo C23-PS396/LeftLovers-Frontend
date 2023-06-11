@@ -56,7 +56,7 @@ const MerchantInformationPage = ({
       fullLocation,
     } = merchantInput;
 
-    if (!profilePictureUrl) return false;
+    if (!profilePictureUrl || !selectedFiles) return false;
     if (!name) return false;
     if (!province) return false;
     if (!regency) return false;
