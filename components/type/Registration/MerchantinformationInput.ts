@@ -1,4 +1,5 @@
 export interface MerchantInformationInput {
+  profilePictureUrl?: string;
   name: string;
   province: Province;
   regency: Regency;

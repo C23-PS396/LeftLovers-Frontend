@@ -47,7 +47,7 @@ const Statistic = () => {
             alignItems="center"
             gap="2"
           >
-            {ratingFormatter.format(merchant?.rating._avg.rating || 0)}{" "}
+            {ratingFormatter.format(merchant?.rating?._avg?.rating || 0)}{" "}
             <StarIcon color="#FFCD3C" />
           </Text>
         </div>

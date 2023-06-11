@@ -168,6 +168,7 @@ const Register = () => {
 
       // Add Merchant
       const resMerchant = await axios.post("/api/merchant", {
+        profilePictureUrl: merchantInput?.profilePictureUrl,
         name: merchantInput?.name,
         locationId: locationId,
         sellerId: sellerId,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   FormControl,
   FormLabel,
@@ -6,7 +7,13 @@ import {
   Button as Buttons,
 } from "@chakra-ui/react";
 import AuthForm from "../AuthForm";
-import { Dispatch, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   District,
   MerchantInformationInput,
@@ -14,6 +21,8 @@ import {
   Regency,
   Village,
 } from "@/components/type/Registration/MerchantinformationInput";
+import { Dropzone } from "./AddFoodPage";
+import uploadHandler from "@/components/utils/uploadHandler";
 
 const MerchantInformationPage = ({
   province,
@@ -32,12 +41,22 @@ const MerchantInformationPage = ({
   setMerchantInput: Dispatch<SetStateAction<MerchantInformationInput>>;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }) => {
+  const [selectedFiles, setSelectedFiles] = useState<File | null>(null);
+
   const validateInput = () => {
     if (!merchantInput) return false;
 
-    const { name, province, regency, district, village, fullLocation } =
-      merchantInput;
+    const {
+      profilePictureUrl,
+      name,
+      province,
+      regency,
+      district,
+      village,
+      fullLocation,
+    } = merchantInput;
 
+    if (!profilePictureUrl) return false;
     if (!name) return false;
     if (!province) return false;
     if (!regency) return false;
@@ -48,9 +67,42 @@ const MerchantInformationPage = ({
     return true;
   };
 
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const file = files[0];
+      if (file) {
+        setSelectedFiles(file);
+        return;
+      }
+    }
+    setSelectedFiles(null);
+  };
+
+  useEffect(() => {
+    if (selectedFiles) {
+      uploadFile();
+    }
+  }, [selectedFiles]);
+
+  const uploadFile = async () => {
+    const url = await uploadHandler(selectedFiles);
+    setMerchantInput({ ...merchantInput, profilePictureUrl: url });
+  };
+
   return (
     <>
       <AuthForm>
+        <FormControl>
+          <FormLabel>Merchant Photo</FormLabel>
+          <Dropzone
+            selectedFiles={selectedFiles}
+            handleFileChange={handleFileChange}
+            setSelectedFiles={
+              setSelectedFiles as Dispatch<SetStateAction<File | null>>
+            }
+          />
+        </FormControl>
         <FormControl>
           <FormLabel>Merchant Name</FormLabel>
           <Input

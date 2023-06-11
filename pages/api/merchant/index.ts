@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { name, locationId, sellerId } = req.body;
+    const { profilePictureUrl, name, locationId, sellerId } = req.body;
     const { cookies } = req;
     const token = cookies.authToken;
 
@@ -18,6 +18,7 @@ export default async function handler(
       const response = await axios.post(
         `${process.env.API_URL}/merchant/register`,
         {
+          profilePictureUrl: profilePictureUrl,
           name: name,
           locationId: locationId,
           sellerId: sellerId,
