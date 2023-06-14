@@ -17,8 +17,7 @@ import {
 } from "@chakra-ui/react";
 import StatusWrapper, { STATUS } from "./StatusWrapper";
 import getDateTime from "@/components/utils/getDateTime";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
-import OrderModal from "./OrderModal";
+import { EditIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import useCustomToast from "@/components/utils/useCustomToast";
 import { Dispatch, SetStateAction } from "react";
@@ -34,7 +33,7 @@ const OrderList = ({
   setTransItem: Dispatch<SetStateAction<Transaction | null>>;
 }) => {
   const toast = useCustomToast();
-  const { getTransaction } =
+  const { getTransaction, getMerchant } =
     useMerchantDataContext() as MerchantDataContextState;
 
   const getStatus = (transaction: Transaction) => {
@@ -66,6 +65,9 @@ const OrderList = ({
         message: "Status updated successfully",
       });
       getTransaction();
+      if (status === STATUS.DONE) {
+        getMerchant();
+      }
       return;
     }
 
@@ -133,6 +135,30 @@ const OrderList = ({
                       }}
                     >
                       Denied
+                    </Button>
+                  </div>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          ) : transactionItem.status === STATUS.ACCEPT ? (
+            <Popover>
+              <PopoverTrigger>
+                <EditIcon color="blue.500" />
+              </PopoverTrigger>
+              <PopoverContent width="fit-content">
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Action</PopoverHeader>
+                <PopoverBody>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      colorScheme="green"
+                      onClick={() => {
+                        updateStatus(STATUS.DONE, transactionItem.id);
+                      }}
+                    >
+                      Mark as Done
                     </Button>
                   </div>
                 </PopoverBody>

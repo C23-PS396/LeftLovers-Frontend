@@ -101,6 +101,7 @@ export interface MerchantDataContextState {
   setReview: Dispatch<SetStateAction<Review[] | null>>;
   getFood: () => void;
   getTransaction: () => void;
+  getMerchant: () => void
 }
 
 export const MerchantDataContext =
@@ -184,6 +185,7 @@ export const MerchantDataContextProvider = ({
     setTransaction,
     getFood,
     getTransaction,
+    getMerchant,
   };
 
   return (
