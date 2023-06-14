@@ -1,19 +1,4 @@
-import {
-  Text,
-  Heading,
-  Wrap,
-  WrapItem,
-  Avatar,
-  useDisclosure,
-  Button,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverBody,
-  Popover,
-} from "@chakra-ui/react";
+import { Text, useDisclosure } from "@chakra-ui/react";
 import LogoWrapper from "../components/LogoWrapper";
 import NavLinkWrapper from "../components/NavLinkWrapper";
 import NavbarWrapper from "../components/NavbarWrapper";
@@ -31,6 +16,8 @@ import HamburgerIcon from "../components/HambergerIcon";
 import useWindowSize from "@/components/hook/useWindowSize";
 import useCustomToast from "@/components/utils/useCustomToast";
 import ProfilePopOver from "./ProfilePopOver";
+import NavlogoLg from "../components/NavLogoLg";
+import NavLogoSm from "../components/NavLogoSm";
 
 const MerchantNavbar = () => {
   const router = useRouter();
@@ -40,6 +27,7 @@ const MerchantNavbar = () => {
   const toast = useCustomToast();
   const { logout, setUser, setAuthStatus }: AuthContextState =
     useAuthContext() as AuthContextState;
+  const { width } = useWindowSize();
 
   const toggleHamburger = () => {
     setOpen(!open);
@@ -67,8 +55,9 @@ const MerchantNavbar = () => {
       <NavbarWrapper>
         <Link href="/dashboard">
           <LogoWrapper>
-            <Heading className="!!lg:text-[2.3rem] text-[2rem] ">Left</Heading>
-            <Text fontSize="2xl">Lovers</Text>
+            <div className="flex items-center justify-start h-fit lg:max-w-[170px] max-w-[38px]">
+              {width >= 1024 ? <NavlogoLg /> : <NavLogoSm />}
+            </div>
           </LogoWrapper>
         </Link>
         <WrapperHamburger open={open} onClick={toggleHamburger}>

@@ -1,6 +1,11 @@
+import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
 import { Doughnut } from "react-chartjs-2";
 
 const DoughnutChart = () => {
+  const { statistic } = useMerchantDataContext() as MerchantDataContextState;
   return (
     <div className="h-[310px] w-fit">
       <Doughnut
@@ -9,16 +14,16 @@ const DoughnutChart = () => {
           datasets: [
             {
               label: "# of Votes",
-              data: [12, 19, 3],
+              data: [statistic?.success, statistic?.fail, statistic?.pending],
               backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
+                "#27C9A9",
+                "#E06469",
+                "#DDD",
               ],
               borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
+                "#20C0A0",
+                "#E03030",
+                "#90B0B0",
               ],
               borderWidth: 1,
             },

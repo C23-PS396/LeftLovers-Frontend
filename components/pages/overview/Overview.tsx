@@ -66,7 +66,7 @@ const Overview = () => {
         <hr />
         <div className="w-full lg:w-3/5 flex flex-col items-center lg:block">
           <Text color="#414D55" fontWeight="bold">
-            Merchant views vs Transaction
+            Last 9 Months&apos; transactions
           </Text>
           <BarChart barWidth={barWidth} />
         </div>

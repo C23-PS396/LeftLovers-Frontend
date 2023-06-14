@@ -90,18 +90,28 @@ export interface Review {
   transactionId: string;
 }
 
+export interface Statistic {
+  success: number;
+  fail: number;
+  pending: number;
+  month: number[];
+  data: number[];
+}
+
 export interface MerchantDataContextState {
   merchant: Merchant | null;
   foods: Food[] | null;
   transaction: Transaction[] | null;
   review: Review[] | null;
+  statistic: Statistic | null;
   setTransaction: Dispatch<SetStateAction<Transaction[] | null>>;
   setMerchant: Dispatch<SetStateAction<Merchant | null>>;
   setFoods: Dispatch<SetStateAction<Food[] | null>>;
   setReview: Dispatch<SetStateAction<Review[] | null>>;
   getFood: () => void;
   getTransaction: () => void;
-  getMerchant: () => void
+  getMerchant: () => void;
+  getStatistic: () => void;
 }
 
 export const MerchantDataContext =
@@ -116,6 +126,7 @@ export const MerchantDataContextProvider = ({
   const [foods, setFoods] = useState<Food[] | null>([]);
   const [transaction, setTransaction] = useState<Transaction[] | null>([]);
   const [review, setReview] = useState<Review[] | null>([]);
+  const [statistic, setStatistic] = useState<Statistic | null>(null);
   const { user } = useAuthContext() as AuthContextState;
 
   const getMerchant = async () => {
@@ -164,11 +175,19 @@ export const MerchantDataContextProvider = ({
     setReview(data);
   };
 
+  const getStatistic = async () => {
+    const response = await axios.get("/api/merchant/summary", {
+      params: { merchantId: merchant?.id },
+    });
+    setStatistic(response.data);
+  };
+
   useEffect(() => {
     if (merchant) {
       getFood();
       getTransaction();
       getReview();
+      getStatistic();
     }
 
     console.log(merchant);
@@ -182,10 +201,12 @@ export const MerchantDataContextProvider = ({
     foods,
     setFoods,
     transaction,
+    statistic,
     setTransaction,
     getFood,
     getTransaction,
     getMerchant,
+    getStatistic,
   };
 
   return (

@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Head>
         <title>LeftLovers Apps</title>
-        <link rel="icon" href="/logo.ico" />
+        <link rel="icon" href="icon.png" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
           name="description"

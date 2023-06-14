@@ -6,15 +6,15 @@ export default function Home() {
     <>
       <Head>
         <title>LeftLovers Apps | Login</title>
-        <link rel="icon" href="/logo.ico" />
+        <link rel="icon" href="icon.png" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
           name="description"
-          content="The easiest customizable URL shortener, ever."
+          content="Saving Food, Saving Money, Saving The Plane"
         />
         <meta
           name="og:title"
-          content="The easiest customizable URL shortener, ever."
+          content="Saving Food, Saving Money, Saving The Plane"
         />
       </Head>
       <Login />

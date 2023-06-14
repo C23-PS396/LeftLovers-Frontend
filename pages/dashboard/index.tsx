@@ -7,15 +7,15 @@ export default function Dashboard() {
     <>
       <Head>
         <title>LeftLovers Apps | Dashboard</title>
-        <link rel="icon" href="/logo.ico" />
+        <link rel="icon" href="icon.png" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
           name="description"
-          content="The easiest customizable URL shortener, ever."
+          content="Saving Food, Saving Money, Saving The Plane"
         />
         <meta
           name="og:title"
-          content="The easiest customizable URL shortener, ever."
+          content="Saving Food, Saving Money, Saving The Plane"
         />
       </Head>
       <Navbar type="merchant" />

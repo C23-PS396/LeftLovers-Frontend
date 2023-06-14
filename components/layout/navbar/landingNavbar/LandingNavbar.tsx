@@ -1,4 +1,4 @@
-import { Text, Heading } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import LogoWrapper from "../components/LogoWrapper";
 import NavLinkWrapper from "../components/NavLinkWrapper";
 import NavbarWrapper from "../components/NavbarWrapper";
@@ -13,11 +13,15 @@ import {
 import { useState } from "react";
 import WrapperHamburger from "../components/WrapperHumberger";
 import HamburgerIcon from "../components/HambergerIcon";
+import NavlogoLg from "../components/NavLogoLg";
+import NavLogoSm from "../components/NavLogoSm";
+import useWindowSize from "@/components/hook/useWindowSize";
 
 const LandingNavbarWrapper = () => {
   const router = useRouter();
   const { authStatus }: AuthContextState = useAuthContext() as AuthContextState;
   const [open, setOpen] = useState(false);
+  const { width } = useWindowSize();
 
   const loginClickHandler = () => {
     toggleHamburger();
@@ -42,8 +46,10 @@ const LandingNavbarWrapper = () => {
     <NavbarWrapper>
       <Link href="#home">
         <LogoWrapper>
-          <Heading>Left</Heading>
-          <Text fontSize="2xl">Lovers</Text>
+          {" "}
+          <div className="flex items-center justify-start h-fit lg:max-w-[170px] max-w-[38px]">
+            {width >= 1024 ? <NavlogoLg /> : <NavLogoSm />}
+          </div>
         </LogoWrapper>
       </Link>
       <WrapperHamburger open={open} onClick={toggleHamburger}>

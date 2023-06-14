@@ -1,4 +1,8 @@
 import {
+  MerchantDataContextState,
+  useMerchantDataContext,
+} from "@/components/context/MerchantDataContext";
+import {
   BarControllerChartOptions,
   ChartData,
   CoreChartOptions,
@@ -11,7 +15,7 @@ import { _DeepPartialObject } from "chart.js/dist/types/utils";
 import { Bar } from "react-chartjs-2";
 
 const BarChart = ({ barWidth }: { barWidth: number }) => {
-  const labels = ["January", "February", "March", "April", "May"];
+  const { statistic } = useMerchantDataContext() as MerchantDataContextState;
 
   const options = {
     maintainAspectRatio: false,
@@ -39,11 +43,11 @@ const BarChart = ({ barWidth }: { barWidth: number }) => {
       },
       tooltip: {
         displayColors: false,
-        backgroundColor: "#5C85FF",
-        titleColor: "#FFF",
+        backgroundColor: "#DDD",
+        titleColor: "#333",
         titleAlign: "center",
         titleFont: "normal",
-        bodyColor: "#FFF",
+        bodyColor: "#333",
         bodyAlign: "center",
       },
     },
@@ -55,20 +59,12 @@ const BarChart = ({ barWidth }: { barWidth: number }) => {
   };
 
   const data = {
-    labels,
+    labels: statistic?.month,
     datasets: [
       {
-        label: "Click on Merchant",
-        data: [1, 2, 5, 4, 3],
-        backgroundColor: "#2C65F1",
-        barThickness: "flex",
-        maxBarThickness: barWidth,
-        minBarLength: 20,
-      },
-      {
-        label: "Transaction",
-        data: [1, 1, 2, 3, 3],
-        backgroundColor: "#27C9A9",
+        label: "Statistic",
+        data: statistic?.data,
+        backgroundColor: "#3182CE",
         barThickness: "flex",
         maxBarThickness: barWidth,
         minBarLength: 20,
