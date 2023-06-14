@@ -55,7 +55,7 @@ const MerchantInformation = () => {
             <Text className="font-bold sm:text-[1.1rem] md:text-[1.2rem] lg:text-[1.3rem]">
               {merchant?.name || "-"}
             </Text>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center lg:justify-start gap-2">
               <Text>{getId()}</Text>
               <CopyIcon
                 className="cursor-pointer"
