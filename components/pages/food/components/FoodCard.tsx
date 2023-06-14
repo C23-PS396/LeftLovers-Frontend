@@ -216,25 +216,6 @@ const FoodCard = ({ food }: { food: Food }) => {
                   </NumberInputStepper>
                 </NumberInput>
               </FormControl>
-              <FormControl>
-                <FormLabel fontWeight="bold" fontSize="0.9rem">
-                  Discount Price
-                </FormLabel>
-                <InputGroup>
-                  <InputLeftAddon>Rp</InputLeftAddon>
-                  <NumberInput value={Number(discountPrice)}>
-                    <NumberInputField
-                      onChange={(e) => {
-                        setDiscountPrice(Number(e.currentTarget.value));
-                      }}
-                    />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </InputGroup>
-              </FormControl>
             </div>
           ) : (
             <>
