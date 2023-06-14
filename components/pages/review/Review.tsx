@@ -67,9 +67,12 @@ const Review = () => {
                 <CardBody className="flex flex-col gap-2">
                   <div className="flex items-center gap-1">
                     <Text className="font-bold mr-2">{el.rating}</Text>
-                    {Array.from({ length: el.rating }, (_, index) => (
-                      <StarIcon color="#FFCD3C" key={index} />
-                    ))}
+                    {Array.from(
+                      { length: el.rating ? el.rating : 0 },
+                      (_, index) => (
+                        <StarIcon color="#FFCD3C" key={index} />
+                      )
+                    )}
                   </div>
                   <Text>{el.review}</Text>
                 </CardBody>
