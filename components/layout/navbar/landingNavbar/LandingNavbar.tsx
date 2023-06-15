@@ -44,7 +44,7 @@ const LandingNavbarWrapper = () => {
 
   return (
     <NavbarWrapper>
-      <Link href="#home">
+      <Link href="/">
         <LogoWrapper>
           {" "}
           <div className="flex items-center justify-start h-fit lg:max-w-[170px] max-w-[38px]">
@@ -56,11 +56,11 @@ const LandingNavbarWrapper = () => {
         <HamburgerIcon />
       </WrapperHamburger>
       <NavLinkWrapper open={open}>
-        <Link href="#about" onClick={toggleHamburger}>
-          <Text fontSize="lg">About</Text>
+        <Link href="#home" onClick={toggleHamburger}>
+          <Text fontSize="lg">Home</Text>
         </Link>
-        <Link href="#our-mission" onClick={toggleHamburger}>
-          <Text fontSize="lg">Our Mission</Text>
+        <Link href="#our-values" onClick={toggleHamburger}>
+          <Text fontSize="lg">Our Values</Text>
         </Link>
         <Link href="#team" onClick={toggleHamburger}>
           <Text fontSize="lg">Team</Text>

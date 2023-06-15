@@ -5,7 +5,7 @@ const Home = () => {
   const router = useRouter();
 
   return (
-    <div id="home" className="h-screen flex items-end">
+    <div id="home" className="h-screen flex items-end relative">
       <div className="absolute left-0 -translate-y-1/2 lg:top-1/2 top-[30%] !z-[2]">
         <div className="lg:px-12 flex flex-col gap-4 z-100 px-6 - w-full">
           <Heading size="2xl" className="z-100 flex gap-2">
@@ -55,8 +55,8 @@ const Home = () => {
           className="overflow-x-hidden hover:scale-110 hover:-translate-x-10 transition-all duration-200 ease-in-out z-0 lg:w-[750px] w-[90%] md:w-[67%] sm:w-[80%]"
         ></Image>
       </div>
-      <div className="relative w-full">
-        <div className="absolute bottom-0 -right-6 -left-6 lg:-left-12 w-screen">
+      <div className="relative !w-full">
+        <div className="absolute bottom-0 w-full">
           <Image
             src="/Group 6.png"
             alt="img"
