@@ -44,9 +44,9 @@ const Home = () => {
           </Button>
         </div>
       </div>
-      <div className="absolute cursor-pointer right-0 -translate-y-1/2 lg:top-1/2 top-[67%] !z-[1] flex !justify-end">
+      <div className="absolute cursor-pointer -right-8 -translate-y-1/2 lg:top-1/2 top-[67%] !z-[1] flex !justify-end">
         <Image
-          src="/landing.png"
+          src="/landing-2.png"
           alt="img"
           style={{
             boxShadow: "0px 0px 40px 3px rgba(0,0,0,0.12)",
