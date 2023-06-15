@@ -4,12 +4,12 @@ const Values = () => {
   return (
     <div
       id="our-values"
-      className="h-screen px-6 lg:px-12 flex flex-col items-center justify-center bg-[#3182cecc] py-8 lg:py-12"
+      className="min-h-screen px-6 lg:px-12 flex flex-col items-center justify-center bg-[#3182cecc] py-12 lg:py-12 pb-[80px]"
     >
       <Heading size="2xl" className="text-[#FFF]">
         Our Values
       </Heading>
-      <Text className="!text-[1.4rem] text-[#FFF] mt-4 font-bold">
+      <Text className="text-center lg:text-start !text-[1.1rem] !lg:text-[1.4rem] text-[#FFF] mt-4 font-bold">
         Every value ​​and mission that you need to know about us
       </Text>
       <div className="flex flex-col lg:flex-row gap-8 mt-8">
