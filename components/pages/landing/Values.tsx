@@ -4,7 +4,7 @@ const Values = () => {
   return (
     <div
       id="our-values"
-      className="min-h-screen px-6 lg:px-12 flex flex-col items-center justify-center bg-[#3182cecc] py-12 lg:py-12 pb-[80px]"
+      className="min-h-screen px-6 lg:px-12 flex flex-col items-center justify-center bg-[#3182cecc] py-12 lg:py-12 pb-[80px] relative"
     >
       <Heading size="2xl" className="text-[#FFF]">
         Our Values
